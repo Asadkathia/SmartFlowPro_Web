@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Invoice #1042 - SmartFlowPro</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0da2e7",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101c22",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#182830",
+                        "border-light": "#e5e7eb",
+                        "border-dark": "#2d3748",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #475569; 
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display h-screen flex overflow-hidden">
+<!-- Side Navigation -->
+<aside class="w-64 bg-surface-light dark:bg-surface-dark border-r border-border-light dark:border-border-dark flex-col hidden md:flex z-20">
+<div class="p-6">
+<div class="flex flex-col gap-1">
+<h1 class="text-slate-900 dark:text-white text-lg font-bold leading-normal flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">water_drop</span>
+                    SmartFlowPro
+                </h1>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-normal leading-normal px-8">Admin Dashboard</p>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-2 overflow-y-auto">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-slate-500 group-hover:text-primary transition-colors">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary dark:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined fill-1">receipt_long</span>
+<span class="text-sm font-medium">Invoices</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-slate-500 group-hover:text-primary transition-colors">group</span>
+<span class="text-sm font-medium">Customers</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-slate-500 group-hover:text-primary transition-colors">calendar_month</span>
+<span class="text-sm font-medium">Schedule</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-slate-500 group-hover:text-primary transition-colors">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</nav>
+<div class="p-4 border-t border-border-light dark:border-border-dark">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+<img alt="Admin User" class="w-full h-full object-cover" data-alt="Profile picture of the current admin user" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAArQci79xx_UnIiEpoSFfZNHarFm49afObNDqmc3WNh7mXW9JCxWkxqIH4XnBo4rGQ1lxwsA-JHLmTeVnjTY7HQZBrnk6_iZMSiDwSmIVD3DIhas6bv4vWp6FqyJ9-3WSnHEMHq0NwM7ruZ8wB6EO4gowNwQrHD3g8SZJ46E7d5ASZXgdBZc2826-_JgaD3uQKmt2l0ftbllKv9JizX7txMmGM3cjfA-YQHHFA6Fo94jLRtcsytD1TaLPvhEw8LZJPRr6sQbo3QOY"/>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-medium text-slate-900 dark:text-white">Alex Morgan</span>
+<span class="text-xs text-slate-500 dark:text-slate-400">Super Admin</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto relative flex flex-col">
+<!-- Sticky Header (Mobile Only / Utility) -->
+<header class="md:hidden flex items-center justify-between p-4 bg-surface-light dark:bg-surface-dark border-b border-border-light dark:border-border-dark">
+<h1 class="font-bold text-lg">Invoice #1042</h1>
+<button class="text-slate-600 dark:text-slate-300">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</header>
+<div class="p-6 md:p-10 max-w-7xl mx-auto w-full flex flex-col gap-6">
+<!-- Breadcrumbs -->
+<nav class="flex text-sm text-slate-500 dark:text-slate-400">
+<a class="hover:text-primary transition-colors" href="#">Dashboard</a>
+<span class="mx-2">/</span>
+<a class="hover:text-primary transition-colors" href="#">Invoices</a>
+<span class="mx-2">/</span>
+<span class="text-slate-900 dark:text-slate-200 font-medium">#1042</span>
+</nav>
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-3">
+<h1 class="text-3xl font-bold text-slate-900 dark:text-white">Invoice #1042</h1>
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/40 dark:text-orange-300 border border-orange-200 dark:border-orange-800">
+                            Awaiting Payment
+                        </span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm">Created on Oct 24, 2023 • Due Oct 31, 2023</p>
+</div>
+<div class="flex flex-wrap gap-3">
+<button class="flex items-center justify-center gap-2 px-4 py-2 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all font-medium text-sm shadow-sm">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+                        Edit
+                    </button>
+<button class="flex items-center justify-center gap-2 px-4 py-2 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all font-medium text-sm shadow-sm">
+<span class="material-symbols-outlined text-[18px]">send</span>
+                        Send
+                    </button>
+<button class="flex items-center justify-center gap-2 px-4 py-2 bg-primary hover:bg-sky-600 text-white rounded-lg transition-all font-medium text-sm shadow-md shadow-primary/20">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+                        Collect Payment
+                    </button>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Main Invoice Area (Paper) -->
+<div class="lg:col-span-2 flex flex-col gap-6">
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-border-light dark:border-border-dark overflow-hidden">
+<!-- Invoice Header -->
+<div class="p-8 border-b border-border-light dark:border-border-dark flex flex-col md:flex-row justify-between gap-6">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2 mb-2">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined">water_drop</span>
+</div>
+<span class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Acme Services</span>
+</div>
+<address class="not-italic text-sm text-slate-500 dark:text-slate-400">
+                                    123 Business Park Way<br/>
+                                    Building 4, Suite 200<br/>
+                                    Springfield, IL 62704
+                                </address>
+</div>
+<div class="text-right md:text-right">
+<h3 class="text-sm font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Total Due</h3>
+<p class="text-3xl font-bold text-slate-900 dark:text-white">$189.00</p>
+<p class="text-sm text-orange-600 dark:text-orange-400 font-medium mt-1">Due in 7 days</p>
+</div>
+</div>
+<!-- Bill To / Service Location -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
+<div>
+<h3 class="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-3">Bill To</h3>
+<div class="flex items-start gap-3">
+<div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-300">
+<span class="material-symbols-outlined">person</span>
+</div>
+<div>
+<p class="font-medium text-slate-900 dark:text-white">Jane Doe</p>
+<p class="text-sm text-slate-500 dark:text-slate-400">jane.doe@example.com</p>
+<p class="text-sm text-slate-500 dark:text-slate-400">+1 (555) 123-4567</p>
+</div>
+</div>
+</div>
+<div>
+<h3 class="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-3">Service Location</h3>
+<div class="flex items-start gap-3">
+<div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-300">
+<span class="material-symbols-outlined">location_on</span>
+</div>
+<div>
+<p class="font-medium text-slate-900 dark:text-white">Residential Property</p>
+<p class="text-sm text-slate-500 dark:text-slate-400">456 Elm Street</p>
+<p class="text-sm text-slate-500 dark:text-slate-400">Springfield, IL 62704</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Line Items -->
+<div class="px-8 pb-8">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-border-light dark:border-border-dark">
+<th class="py-3 pr-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider w-1/2">Service / Description</th>
+<th class="py-3 px-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-right">Qty</th>
+<th class="py-3 px-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-right">Rate</th>
+<th class="py-3 pl-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-right">Amount</th>
+</tr>
+</thead>
+<tbody class="text-sm text-slate-700 dark:text-slate-200">
+<tr class="border-b border-slate-100 dark:border-slate-800/50">
+<td class="py-4 pr-4">
+<div class="font-medium text-slate-900 dark:text-white">Lawn Mowing</div>
+<div class="text-slate-500 dark:text-slate-400 text-xs mt-0.5">Standard cut, trim, and blow.</div>
+</td>
+<td class="py-4 px-4 text-right">1</td>
+<td class="py-4 px-4 text-right">$45.00</td>
+<td class="py-4 pl-4 text-right font-medium">$45.00</td>
+</tr>
+<tr class="border-b border-slate-100 dark:border-slate-800/50">
+<td class="py-4 pr-4">
+<div class="font-medium text-slate-900 dark:text-white">Premium Fertilizer Application</div>
+<div class="text-slate-500 dark:text-slate-400 text-xs mt-0.5">Early Fall Application (Slow Release)</div>
+</td>
+<td class="py-4 px-4 text-right">1</td>
+<td class="py-4 px-4 text-right">$60.00</td>
+<td class="py-4 pl-4 text-right font-medium">$60.00</td>
+</tr>
+<tr class="border-b border-slate-100 dark:border-slate-800/50">
+<td class="py-4 pr-4">
+<div class="font-medium text-slate-900 dark:text-white">Gutter Cleaning</div>
+<div class="text-slate-500 dark:text-slate-400 text-xs mt-0.5">Fall Special - Up to 2000 sq ft home</div>
+</td>
+<td class="py-4 px-4 text-right">1</td>
+<td class="py-4 px-4 text-right">$75.00</td>
+<td class="py-4 pl-4 text-right font-medium">$75.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Totals -->
+<div class="flex justify-end mt-8">
+<div class="w-full md:w-1/2 lg:w-5/12 space-y-3">
+<div class="flex justify-between text-sm text-slate-600 dark:text-slate-400">
+<span>Subtotal</span>
+<span class="font-medium text-slate-900 dark:text-white">$180.00</span>
+</div>
+<div class="flex justify-between text-sm text-slate-600 dark:text-slate-400">
+<span>Tax (5%)</span>
+<span class="font-medium text-slate-900 dark:text-white">$9.00</span>
+</div>
+<div class="border-t border-border-light dark:border-border-dark pt-3 mt-3">
+<div class="flex justify-between items-center">
+<span class="text-base font-bold text-slate-900 dark:text-white">Total</span>
+<span class="text-xl font-bold text-primary">$189.00</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Embedded Map Footer -->
+<div class="h-48 relative border-t border-border-light dark:border-border-dark bg-slate-100 dark:bg-slate-800">
+<img alt="Map view of the service location neighborhood" class="w-full h-full object-cover opacity-80" data-alt="Map view showing the streets around 456 Elm Street" data-location="Springfield, IL" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6_1NgmK1beE-gv3rKzui2LGq9E6M5VzcQLQHxb623ynd7x7X6u-t_ldNG7EsmOURr0BVhDt2cIYr-kQJmGGfpGl9mtjJ8q63Kd_VTkUbtYTDHhsusFtmr3G7-R3r8d27Jgc2djYnnAA_H-S1navWi5i3qSsETFehCl4pQNR6EaimquLLQs_nWMWLSpVTg46gJDQQTOmh1Wzbs7yOVrSL_KQ9vV43DtThEZK0VJVzOrRfuc1i1E9mfb4z1ScYNIRG3hdfzouj5eJY"/>
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<div class="w-8 h-8 rounded-full bg-primary shadow-lg ring-4 ring-white dark:ring-slate-800 flex items-center justify-center animate-bounce">
+<span class="material-symbols-outlined text-white text-sm">home</span>
+</div>
+</div>
+<div class="absolute bottom-3 right-3 bg-white/90 dark:bg-black/80 px-2 py-1 rounded text-xs text-slate-600 dark:text-slate-300 font-medium backdrop-blur-sm shadow-sm">
+                                456 Elm St, Springfield
+                            </div>
+</div>
+</div>
+</div>
+<!-- Right Sidebar (Context & History) -->
+<div class="lg:col-span-1 flex flex-col gap-6">
+<!-- Internal Notes -->
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-border-light dark:border-border-dark p-6">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-bold text-slate-900 dark:text-white text-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-[20px]">chat</span>
+                                Internal Notes
+                            </h3>
+</div>
+<div class="space-y-4 mb-4">
+<div class="bg-slate-50 dark:bg-slate-800 p-3 rounded-lg border border-slate-100 dark:border-slate-700/50">
+<div class="flex justify-between items-start mb-1">
+<span class="text-xs font-semibold text-primary">Mike T.</span>
+<span class="text-[10px] text-slate-400">Yesterday</span>
+</div>
+<p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                                    Customer asked for a 10% discount on the next service if they pay this early. I said I'd check with admin.
+                                </p>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800 p-3 rounded-lg border border-slate-100 dark:border-slate-700/50">
+<div class="flex justify-between items-start mb-1">
+<span class="text-xs font-semibold text-slate-700 dark:text-slate-300">Dispatch</span>
+<span class="text-[10px] text-slate-400">Oct 24</span>
+</div>
+<p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+<span class="font-semibold text-slate-900 dark:text-white">Gate code:</span> 1234. Beware of the dog in the backyard.
+                                </p>
+</div>
+</div>
+<div class="relative">
+<input class="w-full pl-3 pr-10 py-2.5 bg-slate-50 dark:bg-slate-800 border border-border-light dark:border-border-dark rounded-lg text-sm focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all placeholder:text-slate-400 dark:text-white" placeholder="Add a note..." type="text"/>
+<button class="absolute right-2 top-2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">send</span>
+</button>
+</div>
+</div>
+<!-- History Timeline -->
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-border-light dark:border-border-dark p-6 flex-1">
+<h3 class="font-bold text-slate-900 dark:text-white text-sm mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-[20px]">history</span>
+                            Invoice History
+                        </h3>
+<div class="relative pl-2">
+<!-- Vertical Line -->
+<div class="absolute left-[7px] top-2 bottom-2 w-0.5 bg-slate-100 dark:bg-slate-800"></div>
+<!-- Timeline Item 1 -->
+<div class="relative flex gap-4 pb-8">
+<div class="relative z-10 w-4 h-4 rounded-full bg-white dark:bg-slate-700 border-2 border-slate-200 dark:border-slate-600 shrink-0 mt-0.5"></div>
+<div>
+<p class="text-sm font-medium text-slate-900 dark:text-white">Invoice Viewed</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Yesterday, 4:32 PM by Client</p>
+</div>
+</div>
+<!-- Timeline Item 2 -->
+<div class="relative flex gap-4 pb-8">
+<div class="relative z-10 w-4 h-4 rounded-full bg-white dark:bg-slate-700 border-2 border-primary shrink-0 mt-0.5 shadow-[0_0_0_2px_rgba(13,162,231,0.2)]"></div>
+<div>
+<p class="text-sm font-medium text-primary">Invoice Sent</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Oct 25, 9:00 AM via Email</p>
+<div class="mt-2 flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800 px-2 py-1 rounded w-fit border border-slate-100 dark:border-slate-700">
+<span class="material-symbols-outlined text-[14px]">mail</span>
+<span>Sent to jane.doe@example.com</span>
+</div>
+</div>
+</div>
+<!-- Timeline Item 3 -->
+<div class="relative flex gap-4">
+<div class="relative z-10 w-4 h-4 rounded-full bg-white dark:bg-slate-700 border-2 border-slate-200 dark:border-slate-600 shrink-0 mt-0.5"></div>
+<div>
+<p class="text-sm font-medium text-slate-900 dark:text-white">Invoice Created</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Oct 24, 2:15 PM by Alex Morgan</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

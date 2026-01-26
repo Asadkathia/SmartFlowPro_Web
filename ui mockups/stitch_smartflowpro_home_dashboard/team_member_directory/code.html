@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Team Member Directory - SmartFlowPro</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0da2e7",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101c22",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom Toggle Switch Style */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #0da2e7;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #0da2e7;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen font-display text-slate-900 dark:text-slate-100 transition-colors duration-200">
+<!-- Main Layout -->
+<div class="relative flex h-full min-h-screen w-full flex-col overflow-x-hidden">
+<!-- Header Section -->
+<header class="w-full px-6 py-8 md:px-12 lg:px-20 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-[#15232d]">
+<div class="mx-auto max-w-7xl">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+<div class="flex flex-col gap-2">
+<h1 class="text-3xl md:text-4xl font-black tracking-tight text-slate-900 dark:text-white">Team Member Directory</h1>
+<p class="text-slate-500 dark:text-slate-400 text-base md:text-lg">Manage your field technicians, dispatchers, and administrative staff.</p>
+</div>
+<button class="group flex items-center justify-center gap-2 h-12 px-6 bg-primary hover:bg-sky-600 text-white text-sm font-bold rounded-lg shadow-sm hover:shadow-md transition-all duration-200 whitespace-nowrap w-full md:w-auto">
+<span class="material-symbols-outlined text-[20px]">add</span>
+<span>Add Team Member</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 w-full px-6 py-8 md:px-12 lg:px-20">
+<div class="mx-auto max-w-7xl flex flex-col gap-8">
+<!-- Filter Toolbar -->
+<div class="flex flex-col md:flex-row gap-4 items-center justify-between bg-white dark:bg-[#15232d] p-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
+<!-- Search -->
+<div class="relative w-full md:max-w-md">
+<span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</span>
+<input class="form-input w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-primary/50 transition-all" placeholder="Search by name, email or phone..." type="text"/>
+</div>
+<!-- Filters -->
+<div class="flex w-full md:w-auto items-center gap-3 overflow-x-auto pb-2 md:pb-0 no-scrollbar">
+<button class="px-4 py-2 rounded-lg bg-primary/10 text-primary text-sm font-semibold whitespace-nowrap border border-primary/20">All Roles</button>
+<button class="px-4 py-2 rounded-lg bg-transparent hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 text-sm font-medium whitespace-nowrap border border-slate-200 dark:border-slate-700 transition-colors">Technicians</button>
+<button class="px-4 py-2 rounded-lg bg-transparent hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 text-sm font-medium whitespace-nowrap border border-slate-200 dark:border-slate-700 transition-colors">Dispatch</button>
+<button class="px-4 py-2 rounded-lg bg-transparent hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 text-sm font-medium whitespace-nowrap border border-slate-200 dark:border-slate-700 transition-colors">Admin</button>
+</div>
+</div>
+<!-- Grid Layout -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+<!-- Card 1: Technician (Active) -->
+<div class="group relative flex flex-col bg-white dark:bg-[#15232d] rounded-xl shadow-sm hover:shadow-lg border border-slate-100 dark:border-slate-800 transition-all duration-300 overflow-hidden">
+<div class="absolute top-4 right-4">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+<div class="p-6 flex flex-col items-center text-center gap-4 border-b border-slate-100 dark:border-slate-800/50">
+<div class="relative">
+<div class="w-24 h-24 rounded-full overflow-hidden bg-slate-200 ring-4 ring-slate-50 dark:ring-slate-800">
+<img class="w-full h-full object-cover" data-alt="Portrait of a male field technician" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgAifgKSbk6qIt7062G9jKCIhONij20Ei7BewSziASx7gUXi-Hi8uCsR_ly7mcr7h-DSHv7Z5gGgypPHSs5E24Ir-aRycdqJeFWZIbY9q8ei3HZBU80G-P1diD9sAAgbgmHxj6bdtw-4GY_ZKLYaKS0k23N1O-h5H4t7Me3_CIoexHfqx6kGpkfVD_9TF43v00T5coZBHf0Jk12uHrlpY8knuXLzBx2e4hddOJ1lZvmsEZ8Jq1vtmQPq7Wl2BcwcrpHUATaUUwmZ0"/>
+</div>
+<span class="absolute bottom-1 right-1 w-5 h-5 bg-green-500 border-2 border-white dark:border-[#15232d] rounded-full" title="Online"></span>
+</div>
+<div>
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">Alex Johnson</h3>
+<span class="inline-flex mt-2 items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+                                    Technician
+                                </span>
+</div>
+</div>
+<div class="p-4 bg-slate-50/50 dark:bg-slate-800/20 flex flex-col gap-3">
+<div class="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-[18px] text-primary">call</span>
+<span>+1 (555) 123-4567</span>
+</div>
+<div class="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-[18px] text-primary">mail</span>
+<span class="truncate">alex.j@smartflow.com</span>
+</div>
+</div>
+<div class="mt-auto p-4 flex items-center justify-between border-t border-slate-100 dark:border-slate-800">
+<span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</span>
+<div class="flex items-center gap-2">
+<span class="text-xs font-medium text-slate-700 dark:text-slate-300">Active</span>
+<label class="relative inline-block w-10 h-6 cursor-pointer" for="toggle-1">
+<input checked="" class="sr-only peer" id="toggle-1" type="checkbox"/>
+<div class="w-full h-full bg-slate-200 dark:bg-slate-700 rounded-full peer-checked:bg-primary transition-colors duration-200"></div>
+<div class="absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform duration-200 peer-checked:translate-x-4 shadow-sm"></div>
+</label>
+</div>
+</div>
+</div>
+<!-- Card 2: Dispatch (Active) -->
+<div class="group relative flex flex-col bg-white dark:bg-[#15232d] rounded-xl shadow-sm hover:shadow-lg border border-slate-100 dark:border-slate-800 transition-all duration-300 overflow-hidden">
+<div class="absolute top-4 right-4">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+<div class="p-6 flex flex-col items-center text-center gap-4 border-b border-slate-100 dark:border-slate-800/50">
+<div class="relative">
+<div class="w-24 h-24 rounded-full overflow-hidden bg-slate-200 ring-4 ring-slate-50 dark:ring-slate-800">
+<img class="w-full h-full object-cover" data-alt="Portrait of a female dispatch officer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfCwSS24Te9xzpg4jxzcSy5wf-mcBKZiBgl63K7yS2Wj0hbzCeG-ZVM8DrTyUmLghNpHnQwVJhWPe7GvIkOf4ZkzKc4oyVtm-qeQ01nmhoL0eKyh-pIQw_duTPEcikSrFYfjXP226R9zfiaolHAO3fLA6w_VpbFoWH4HcJjktvWMouta14E-ARuxfFy5K-WzJzEoOJ39tmsIVIfhN8_umoBXSfq_DVUzPdbVZjpUvNrX4L0bol9LkKbQNSEZvaeR0SXwmI_qz5tQ4"/>
+</div>
+</div>
+<div>
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">Sarah Connor</h3>
+<span class="inline-flex mt-2 items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300">
+                                    Dispatch
+                                </span>
+</div>
+</div>
+<div class="p-4 bg-slate-50/50 dark:bg-slate-800/20 flex flex-col gap-3">
+<div class="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-[18px] text-primary">call</span>
+<span>+1 (555) 987-6543</span>
+</div>
+<div class="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-[18px] text-primary">mail</span>
+<span class="truncate">sarah.c@smartflow.com</span>
+</div>
+</div>
+<div class="mt-auto p-4 flex items-center justify-between border-t border-slate-100 dark:border-slate-800">
+<span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</span>
+<div class="flex items-center gap-2">
+<span class="text-xs font-medium text-slate-700 dark:text-slate-300">Active</span>
+<label class="relative inline-block w-10 h-6 cursor-pointer" for="toggle-2">
+<input checked="" class="sr-only peer" id="toggle-2" type="checkbox"/>
+<div class="w-full h-full bg-slate-200 dark:bg-slate-700 rounded-full peer-checked:bg-primary transition-colors duration-200"></div>
+<div class="absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform duration-200 peer-checked:translate-x-4 shadow-sm"></div>
+</label>
+</div>
+</div>
+</div>
+<!-- Card 3: Admin (Inactive) -->
+<div class="group relative flex flex-col bg-white dark:bg-[#15232d] rounded-xl shadow-sm hover:shadow-lg border border-slate-100 dark:border-slate-800 transition-all duration-300 overflow-hidden opacity-80 hover:opacity-100">
+<div class="absolute top-4 right-4">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+<div class="p-6 flex flex-col items-center text-center gap-4 border-b border-slate-100 dark:border-slate-800/50 grayscale-[0.5]">
+<div class="relative">
+<div class="w-24 h-24 rounded-full overflow-hidden bg-slate-200 ring-4 ring-slate-50 dark:ring-slate-800">
+<img class="w-full h-full object-cover" data-alt="Portrait of a male admin user" src="https://lh3.googleusercontent.com/aida-public/AB6AXuChIgBuJAwcRcNz5ByFxq0WZyZPRN3LAAYtLVKiT_yBX52WI86-64zlEv9L8fvOA4etQVwUCHY0L7T0XBUT4MddeK2_ipytFL76cg3mglRygq_q-6GKUxkVC2WMOX0jOf7IrQOHKHsLgsazNooAx3un9XDYVmsWlcP8T7JPIXo4_54vxIaYuz5XvD--InLaHwg9K0GWMv8JmijvPhMrJpD29zU5hrj_G7EcxxariMSbadFc9A2jYQfZbxf0qCzPZg7ySbQRQ5v4d90"/>
+</div>
+</div>
+<div>
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">Michael Smith</h3>
+<span class="inline-flex mt-2 items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300">
+                                    Admin
+                                </span>
+</div>
+</div>
+<div class="p-4 bg-slate-50/50 dark:bg-slate-800/20 flex flex-col gap-3">
+<div class="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-[18px] text-primary">call</span>
+<span>+1 (555) 345-6789</span>
+</div>
+<div class="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-[18px] text-primary">mail</span>
+<span class="truncate">m.smith@smartflow.com</span>
+</div>
+</div>
+<div class="mt-auto p-4 flex items-center justify-between border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/40">
+<span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</span>
+<div class="flex items-center gap-2">
+<span class="text-xs font-medium text-slate-500">Inactive</span>
+<label class="relative inline-block w-10 h-6 cursor-pointer" for="toggle-3">
+<input class="sr-only peer" id="toggle-3" type="checkbox"/>
+<div class="w-full h-full bg-slate-200 dark:bg-slate-700 rounded-full peer-checked:bg-primary transition-colors duration-200"></div>
+<div class="absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform duration-200 peer-checked:translate-x-4 shadow-sm"></div>
+</label>
+</div>
+</div>
+</div>
+<!-- Card 4: Technician (Active) -->
+<div class="group relative flex flex-col bg-white dark:bg-[#15232d] rounded-xl shadow-sm hover:shadow-lg border border-slate-100 dark:border-slate-800 transition-all duration-300 overflow-hidden">
+<div class="absolute top-4 right-4">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+<div class="p-6 flex flex-col items-center text-center gap-4 border-b border-slate-100 dark:border-slate-800/50">
+<div class="relative">
+<div class="w-24 h-24 rounded-full overflow-hidden bg-slate-200 ring-4 ring-slate-50 dark:ring-slate-800">
+<img class="w-full h-full object-cover" data-alt="Portrait of a male field technician" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyrep1PPX9Gd8dTt4XgS8SjR-nOvGTWpyeAagAXxTDGuPfXxM-UPLnw1tesjfwZiJLsLnVueXshUSk_l6HfUKcuCJX-W2P0_juy3xjpUXssVqGj5BnvBZ_9Qbkps3w1AKH3pHIdw6u_MfAsOG_cW5ojOnSCJE0ajaMIfejdqqJZGxskVg-uSezdmIObtLqJT1lDpoHBBeI6f-MgdIFUBnIDHwc1usM5fVl_1cx3wuglFOvwwuwYt2kN_AZyQRTTIuv0rn2ls_o0RI"/>
+</div>
+<span class="absolute bottom-1 right-1 w-5 h-5 bg-green-500 border-2 border-white dark:border-[#15232d] rounded-full" title="Online"></span>
+</div>
+<div>
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">David Wong</h3>
+<span class="inline-flex mt-2 items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+                                    Technician
+                                </span>
+</div>
+</div>
+<div class="p-4 bg-slate-50/50 dark:bg-slate-800/20 flex flex-col gap-3">
+<div class="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-[18px] text-primary">call</span>
+<span>+1 (555) 765-4321</span>
+</div>
+<div class="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-[18px] text-primary">mail</span>
+<span class="truncate">david.w@smartflow.com</span>
+</div>
+</div>
+<div class="mt-auto p-4 flex items-center justify-between border-t border-slate-100 dark:border-slate-800">
+<span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</span>
+<div class="flex items-center gap-2">
+<span class="text-xs font-medium text-slate-700 dark:text-slate-300">Active</span>
+<label class="relative inline-block w-10 h-6 cursor-pointer" for="toggle-4">
+<input checked="" class="sr-only peer" id="toggle-4" type="checkbox"/>
+<div class="w-full h-full bg-slate-200 dark:bg-slate-700 rounded-full peer-checked:bg-primary transition-colors duration-200"></div>
+<div class="absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform duration-200 peer-checked:translate-x-4 shadow-sm"></div>
+</label>
+</div>
+</div>
+</div>
+<!-- Card 5: Dispatch (Inactive) -->
+<div class="group relative flex flex-col bg-white dark:bg-[#15232d] rounded-xl shadow-sm hover:shadow-lg border border-slate-100 dark:border-slate-800 transition-all duration-300 overflow-hidden opacity-80 hover:opacity-100">
+<div class="absolute top-4 right-4">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+<div class="p-6 flex flex-col items-center text-center gap-4 border-b border-slate-100 dark:border-slate-800/50 grayscale-[0.5]">
+<div class="relative">
+<div class="w-24 h-24 rounded-full overflow-hidden bg-slate-200 ring-4 ring-slate-50 dark:ring-slate-800">
+<img class="w-full h-full object-cover" data-alt="Portrait of a female dispatch staff" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcw1_fSF7LfdjlflnuAeBAmDSATBPy1456kHtG2GrLxmEsYP9nZjidO8FtxAVbe817SL9ayB-8q9j4BUYAozoMaFptzN9wyX3vJ76m6vcjRHCw8sPC0-wQZ6E00gLDmJtEto02bHC9b7JPy9r6JNwbMU2tZ0-oG3xoUXQVQtwNzpQSATvxnvJb8wJKtu62SJWmaauVe8Eb4leJFZe0_Ir3dRXHxvWQjqn5oSZ1Bo-ogj0AIJg2Hs9Y5UTei4pFnhtx8mgjKT8OGQE"/>
+</div>
+</div>
+<div>
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">Elena Rodriguez</h3>
+<span class="inline-flex mt-2 items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300">
+                                    Dispatch
+                                </span>
+</div>
+</div>
+<div class="p-4 bg-slate-50/50 dark:bg-slate-800/20 flex flex-col gap-3">
+<div class="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-[18px] text-primary">call</span>
+<span>+1 (555) 234-5678</span>
+</div>
+<div class="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-[18px] text-primary">mail</span>
+<span class="truncate">elena.r@smartflow.com</span>
+</div>
+</div>
+<div class="mt-auto p-4 flex items-center justify-between border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/40">
+<span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</span>
+<div class="flex items-center gap-2">
+<span class="text-xs font-medium text-slate-500">Inactive</span>
+<label class="relative inline-block w-10 h-6 cursor-pointer" for="toggle-5">
+<input class="sr-only peer" id="toggle-5" type="checkbox"/>
+<div class="w-full h-full bg-slate-200 dark:bg-slate-700 rounded-full peer-checked:bg-primary transition-colors duration-200"></div>
+<div class="absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform duration-200 peer-checked:translate-x-4 shadow-sm"></div>
+</label>
+</div>
+</div>
+</div>
+<!-- Card 6: Technician (Active) -->
+<div class="group relative flex flex-col bg-white dark:bg-[#15232d] rounded-xl shadow-sm hover:shadow-lg border border-slate-100 dark:border-slate-800 transition-all duration-300 overflow-hidden">
+<div class="absolute top-4 right-4">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+<div class="p-6 flex flex-col items-center text-center gap-4 border-b border-slate-100 dark:border-slate-800/50">
+<div class="relative">
+<div class="w-24 h-24 rounded-full overflow-hidden bg-slate-200 ring-4 ring-slate-50 dark:ring-slate-800">
+<img class="w-full h-full object-cover" data-alt="Portrait of a male field technician" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_Yy52AeWekqelEvqmr0KkvBsW_jG37nIhMdFjtmyRNFK9Dxn3lV3GOFhMtUYN63j7T22R45y5YfZP6dXQ27qy2tVR5gWn_Ie3ZVA78USxhhlc8wGc_FoJYhHuHZCE_vuzhAGYdUxadLpZDL-hoia9xbOkNpvyhk7m1DSKi3A37UHCIygR-qW1sZT3zHrm6N26xuRXqtEmoa4uCImG1tMUjEgezx-31TCVDf1Cn0PzKLVbTt_O8QQUCUocSr4wjBfHS9e2y9-ilzk"/>
+</div>
+</div>
+<div>
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">James Wilson</h3>
+<span class="inline-flex mt-2 items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+                                    Technician
+                                </span>
+</div>
+</div>
+<div class="p-4 bg-slate-50/50 dark:bg-slate-800/20 flex flex-col gap-3">
+<div class="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-[18px] text-primary">call</span>
+<span>+1 (555) 876-5432</span>
+</div>
+<div class="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-[18px] text-primary">mail</span>
+<span class="truncate">james.w@smartflow.com</span>
+</div>
+</div>
+<div class="mt-auto p-4 flex items-center justify-between border-t border-slate-100 dark:border-slate-800">
+<span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</span>
+<div class="flex items-center gap-2">
+<span class="text-xs font-medium text-slate-700 dark:text-slate-300">Active</span>
+<label class="relative inline-block w-10 h-6 cursor-pointer" for="toggle-6">
+<input checked="" class="sr-only peer" id="toggle-6" type="checkbox"/>
+<div class="w-full h-full bg-slate-200 dark:bg-slate-700 rounded-full peer-checked:bg-primary transition-colors duration-200"></div>
+<div class="absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform duration-200 peer-checked:translate-x-4 shadow-sm"></div>
+</label>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

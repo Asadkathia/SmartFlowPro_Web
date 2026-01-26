@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Quotes Pipeline Kanban - SmartFlowPro</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0da2e7",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101c22",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-[#0d171c] dark:text-white overflow-hidden">
+<div class="flex h-screen w-full">
+<!-- SideNavBar -->
+<aside class="w-64 flex-shrink-0 flex flex-col border-r border-[#e7f0f4] dark:border-slate-700 bg-background-light dark:bg-background-dark">
+<div class="flex h-16 items-center px-6 border-b border-[#e7f0f4] dark:border-slate-700">
+<div class="flex flex-col">
+<h1 class="text-[#0d171c] dark:text-white text-lg font-bold leading-normal">SmartFlowPro</h1>
+<p class="text-[#49829c] text-xs font-normal leading-normal">Web Admin</p>
+</div>
+</div>
+<div class="flex flex-col gap-2 p-4">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#e7f0f4] dark:hover:bg-slate-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-[#49829c] group-hover:text-primary">dashboard</span>
+<p class="text-[#0d171c] dark:text-slate-300 text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<!-- Active Item -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary" href="#">
+<span class="material-symbols-outlined text-primary fill-1">format_quote</span>
+<p class="text-primary text-sm font-bold leading-normal">Quotes</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#e7f0f4] dark:hover:bg-slate-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-[#49829c] group-hover:text-primary">work</span>
+<p class="text-[#0d171c] dark:text-slate-300 text-sm font-medium leading-normal">Jobs</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#e7f0f4] dark:hover:bg-slate-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-[#49829c] group-hover:text-primary">receipt</span>
+<p class="text-[#0d171c] dark:text-slate-300 text-sm font-medium leading-normal">Invoices</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#e7f0f4] dark:hover:bg-slate-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-[#49829c] group-hover:text-primary">settings</span>
+<p class="text-[#0d171c] dark:text-slate-300 text-sm font-medium leading-normal">Settings</p>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col min-w-0 overflow-hidden bg-white dark:bg-slate-900">
+<!-- TopNavBar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-[#e7f0f4] dark:border-slate-700 px-8 py-3 bg-background-light dark:bg-background-dark">
+<div class="flex items-center gap-4 text-[#0d171c] dark:text-white">
+<h2 class="text-[#0d171c] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">Quotes Pipeline</h2>
+</div>
+<div class="flex flex-1 justify-end gap-6 items-center">
+<div class="relative hidden md:flex w-full max-w-xs">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-[#49829c]">search</span>
+</div>
+<input class="block w-full rounded-lg border-none bg-[#e7f0f4] dark:bg-slate-800 py-2 pl-10 pr-3 text-sm placeholder-[#49829c] focus:ring-2 focus:ring-primary focus:bg-white dark:focus:bg-slate-700 transition-all" placeholder="Search quotes, clients..." type="text"/>
+</div>
+<div class="flex gap-2">
+<button class="flex items-center justify-center rounded-lg size-10 bg-[#e7f0f4] dark:bg-slate-800 text-[#0d171c] dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+</button>
+<button class="flex items-center justify-center rounded-lg size-10 bg-[#e7f0f4] dark:bg-slate-800 text-[#0d171c] dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-[20px]">help</span>
+</button>
+</div>
+<div class="h-10 w-10 rounded-full bg-cover bg-center border border-slate-200 dark:border-slate-700 cursor-pointer" data-alt="User profile avatar of a smiling man" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAOuOAPOHndmyb4JOkryj64sU88Wcp3w_dwPmjTHr2E080PjjxIfGgezogxdwNhEo6zAr_cl5zvqljDIchUblmySm-sr_S8SfpO6jevhTbF8yQ4Xi-3jjAyfxL3wOUbrZSTEoDgTiLw3Q-CFT7M8Q2P4idbi5WCzLdj-Uw0qD58gpYzjvvY_KSknrfLvJ5EiW0B4BEqU4t1A5NA4afFelT8crBOn0SHpZZi65bet5dBPsC87bfx30sT8HbBp-728PGYcKWtpmXwSXI');"></div>
+</div>
+</header>
+<!-- Scrollable Content Area -->
+<div class="flex-1 overflow-x-auto overflow-y-auto bg-background-light dark:bg-background-dark">
+<div class="p-8 min-w-[1200px]">
+<!-- Page Heading & Actions -->
+<div class="flex flex-wrap justify-between items-end gap-4 mb-8">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2 text-sm text-[#49829c]">
+<span>Sales</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="text-primary font-medium">Pipeline</span>
+</div>
+<p class="text-[#0d171c] dark:text-white text-3xl font-black leading-tight tracking-tight mt-2">Quotes Board</p>
+<p class="text-[#49829c] text-base font-normal">Drag and drop cards to update quote status</p>
+</div>
+<button class="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-5 py-2.5 rounded-lg text-sm font-bold shadow-md shadow-primary/20 transition-all">
+<span class="material-symbols-outlined text-[20px]">add</span>
+<span>New Quote</span>
+</button>
+</div>
+<!-- Stats Row -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+<div class="flex flex-col gap-1 rounded-xl p-5 bg-white dark:bg-slate-800 border border-[#e7f0f4] dark:border-slate-700 shadow-sm">
+<div class="flex items-center justify-between">
+<p class="text-[#49829c] text-sm font-medium">Total Active Quotes</p>
+<span class="material-symbols-outlined text-primary bg-primary/10 p-1 rounded">description</span>
+</div>
+<p class="text-[#0d171c] dark:text-white text-2xl font-bold mt-1">24</p>
+</div>
+<div class="flex flex-col gap-1 rounded-xl p-5 bg-white dark:bg-slate-800 border border-[#e7f0f4] dark:border-slate-700 shadow-sm">
+<div class="flex items-center justify-between">
+<p class="text-[#49829c] text-sm font-medium">Pipeline Value</p>
+<span class="material-symbols-outlined text-green-500 bg-green-500/10 p-1 rounded">attach_money</span>
+</div>
+<p class="text-[#0d171c] dark:text-white text-2xl font-bold mt-1">$124,500</p>
+</div>
+<div class="flex flex-col gap-1 rounded-xl p-5 bg-white dark:bg-slate-800 border border-[#e7f0f4] dark:border-slate-700 shadow-sm">
+<div class="flex items-center justify-between">
+<p class="text-[#49829c] text-sm font-medium">Conversion Rate</p>
+<span class="material-symbols-outlined text-purple-500 bg-purple-500/10 p-1 rounded">trending_up</span>
+</div>
+<p class="text-[#0d171c] dark:text-white text-2xl font-bold mt-1">68%</p>
+</div>
+<div class="flex flex-col gap-1 rounded-xl p-5 bg-white dark:bg-slate-800 border border-[#e7f0f4] dark:border-slate-700 shadow-sm">
+<div class="flex items-center justify-between">
+<p class="text-[#49829c] text-sm font-medium">Avg. Response Time</p>
+<span class="material-symbols-outlined text-orange-500 bg-orange-500/10 p-1 rounded">schedule</span>
+</div>
+<p class="text-[#0d171c] dark:text-white text-2xl font-bold mt-1">2.4 Days</p>
+</div>
+</div>
+<!-- Kanban Board -->
+<div class="flex gap-6 h-[calc(100vh-340px)] min-h-[500px]">
+<!-- Column: Draft -->
+<div class="flex-1 min-w-[300px] flex flex-col bg-[#eef3f6] dark:bg-slate-800/50 rounded-xl p-3 border border-[#e7f0f4] dark:border-slate-700/50">
+<div class="flex items-center justify-between px-2 py-3 mb-2">
+<div class="flex items-center gap-2">
+<h3 class="text-[#0d171c] dark:text-white text-sm font-bold uppercase tracking-wider">Draft</h3>
+<span class="bg-white dark:bg-slate-700 text-[#49829c] text-xs font-bold px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-600">3</span>
+</div>
+<button class="text-[#49829c] hover:text-[#0d171c] dark:hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<div class="flex-1 flex flex-col gap-3 overflow-y-auto pr-1 custom-scrollbar">
+<!-- Card 1 -->
+<div class="group bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 hover:shadow-md cursor-grab active:cursor-grabbing transition-all">
+<div class="flex justify-between items-start mb-2">
+<div class="flex flex-col">
+<span class="text-xs text-[#49829c] font-medium mb-1">#Q-9944</span>
+<h4 class="text-[#0d171c] dark:text-white font-semibold text-sm">Acme Corp HQ</h4>
+</div>
+<button class="opacity-0 group-hover:opacity-100 transition-opacity text-[#49829c] hover:bg-slate-100 dark:hover:bg-slate-700 rounded p-1">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</div>
+<div class="flex items-center gap-1.5 text-xs text-[#49829c] mb-4">
+<span class="material-symbols-outlined text-[14px]">calendar_today</span>
+<span>Expires Nov 02, 2023</span>
+</div>
+<div class="flex items-center justify-between pt-3 border-t border-[#f1f5f9] dark:border-slate-700">
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full bg-blue-100 border border-white dark:border-slate-800 flex items-center justify-center text-[10px] font-bold text-blue-600">JD</div>
+</div>
+<span class="text-[#0d171c] dark:text-white font-bold text-sm">$8,200.00</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 hover:shadow-md cursor-grab active:cursor-grabbing transition-all">
+<div class="flex justify-between items-start mb-2">
+<div class="flex flex-col">
+<span class="text-xs text-[#49829c] font-medium mb-1">#Q-9943</span>
+<h4 class="text-[#0d171c] dark:text-white font-semibold text-sm">Residential Fix - 12B</h4>
+</div>
+<button class="opacity-0 group-hover:opacity-100 transition-opacity text-[#49829c] hover:bg-slate-100 dark:hover:bg-slate-700 rounded p-1">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</div>
+<div class="flex items-center gap-1.5 text-xs text-[#49829c] mb-4">
+<span class="material-symbols-outlined text-[14px]">calendar_today</span>
+<span>Expires Nov 01, 2023</span>
+</div>
+<div class="flex items-center justify-between pt-3 border-t border-[#f1f5f9] dark:border-slate-700">
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full bg-purple-100 border border-white dark:border-slate-800 flex items-center justify-center text-[10px] font-bold text-purple-600">AS</div>
+</div>
+<span class="text-[#0d171c] dark:text-white font-bold text-sm">$1,550.00</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Column: Sent -->
+<div class="flex-1 min-w-[300px] flex flex-col bg-[#eef3f6] dark:bg-slate-800/50 rounded-xl p-3 border border-[#e7f0f4] dark:border-slate-700/50">
+<div class="flex items-center justify-between px-2 py-3 mb-2">
+<div class="flex items-center gap-2">
+<h3 class="text-primary text-sm font-bold uppercase tracking-wider">Sent</h3>
+<span class="bg-white dark:bg-slate-700 text-primary text-xs font-bold px-2 py-0.5 rounded-full border border-primary/20">5</span>
+</div>
+<button class="text-[#49829c] hover:text-[#0d171c] dark:hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<div class="flex-1 flex flex-col gap-3 overflow-y-auto pr-1 custom-scrollbar">
+<!-- Highlighted Card -->
+<div class="group relative bg-white dark:bg-slate-800 p-4 rounded-lg shadow-[0_4px_12px_rgba(13,162,231,0.15)] border border-primary/40 hover:shadow-lg cursor-grab active:cursor-grabbing transition-all transform hover:-translate-y-0.5 z-10">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-l-lg"></div>
+<div class="flex justify-between items-start mb-2 pl-2">
+<div class="flex flex-col">
+<span class="text-xs text-primary font-bold mb-1 flex items-center gap-1">
+                                                #Q-9941
+                                                <span class="w-1.5 h-1.5 rounded-full bg-orange-400" title="High Priority"></span>
+</span>
+<h4 class="text-[#0d171c] dark:text-white font-bold text-base">Horizon Property Group</h4>
+</div>
+<button class="text-[#49829c] hover:bg-slate-100 dark:hover:bg-slate-700 rounded p-1">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</div>
+<div class="flex items-center gap-1.5 text-xs text-[#0d171c] dark:text-slate-300 font-medium mb-4 pl-2 bg-slate-50 dark:bg-slate-700/50 p-2 rounded w-fit">
+<span class="material-symbols-outlined text-[16px] text-orange-500">warning</span>
+<span>Valid until Oct 24, 2023</span>
+</div>
+<div class="flex items-center justify-between pt-3 border-t border-[#f1f5f9] dark:border-slate-700 pl-2">
+<div class="flex -space-x-2">
+<div class="w-7 h-7 rounded-full bg-cover border-2 border-white dark:border-slate-800" data-alt="Assignee avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAzCBmMRJ0BFu_TfH69bKg2UNg6oMLLngwTQeSonS_wiGmUXgq5T7hiPw3NB8lejL2RQ5VCjk08r4yH4i_CpmA-kudgRAhTEiPWaC6uAo2b5COis2CvbghGJYrbCgSkNsF2-g_QJarTWJvnLKfxOPWA-B_RKmB-BuZFGCBDl_Ye8J3LBYJqPO7w4FNvDr7MGo5ZdYjIaC771cAq8fF_AB9OpSkvgyurHrsFm6mwC3f-ErymMvRsBIOY7oNMsG3Uq4Ykloq_GNqUA_c');"></div>
+</div>
+<span class="text-primary font-black text-lg">$4,250.00</span>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="group bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 hover:shadow-md cursor-grab active:cursor-grabbing transition-all">
+<div class="flex justify-between items-start mb-2">
+<div class="flex flex-col">
+<span class="text-xs text-[#49829c] font-medium mb-1">#Q-9940</span>
+<h4 class="text-[#0d171c] dark:text-white font-semibold text-sm">Downtown Office Reno</h4>
+</div>
+<button class="opacity-0 group-hover:opacity-100 transition-opacity text-[#49829c] hover:bg-slate-100 dark:hover:bg-slate-700 rounded p-1">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</div>
+<div class="flex items-center gap-1.5 text-xs text-[#49829c] mb-4">
+<span class="material-symbols-outlined text-[14px]">calendar_today</span>
+<span>Expires Oct 30, 2023</span>
+</div>
+<div class="flex items-center justify-between pt-3 border-t border-[#f1f5f9] dark:border-slate-700">
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full bg-pink-100 border border-white dark:border-slate-800 flex items-center justify-center text-[10px] font-bold text-pink-600">MK</div>
+</div>
+<span class="text-[#0d171c] dark:text-white font-bold text-sm">$12,400.00</span>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="group bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 hover:shadow-md cursor-grab active:cursor-grabbing transition-all opacity-80">
+<div class="flex justify-between items-start mb-2">
+<div class="flex flex-col">
+<span class="text-xs text-[#49829c] font-medium mb-1">#Q-9938</span>
+<h4 class="text-[#0d171c] dark:text-white font-semibold text-sm">Westside Plumbing</h4>
+</div>
+<button class="opacity-0 group-hover:opacity-100 transition-opacity text-[#49829c] hover:bg-slate-100 dark:hover:bg-slate-700 rounded p-1">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</div>
+<div class="flex items-center gap-1.5 text-xs text-[#49829c] mb-4">
+<span class="material-symbols-outlined text-[14px]">calendar_today</span>
+<span>Expires Oct 28, 2023</span>
+</div>
+<div class="flex items-center justify-between pt-3 border-t border-[#f1f5f9] dark:border-slate-700">
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full bg-blue-100 border border-white dark:border-slate-800 flex items-center justify-center text-[10px] font-bold text-blue-600">JD</div>
+</div>
+<span class="text-[#0d171c] dark:text-white font-bold text-sm">$3,100.00</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Column: Approved -->
+<div class="flex-1 min-w-[300px] flex flex-col bg-[#eef3f6] dark:bg-slate-800/50 rounded-xl p-3 border border-[#e7f0f4] dark:border-slate-700/50">
+<div class="flex items-center justify-between px-2 py-3 mb-2">
+<div class="flex items-center gap-2">
+<h3 class="text-green-600 dark:text-green-400 text-sm font-bold uppercase tracking-wider">Approved</h3>
+<span class="bg-white dark:bg-slate-700 text-green-600 dark:text-green-400 text-xs font-bold px-2 py-0.5 rounded-full border border-green-200 dark:border-green-900">2</span>
+</div>
+<button class="text-[#49829c] hover:text-[#0d171c] dark:hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<div class="flex-1 flex flex-col gap-3 overflow-y-auto pr-1 custom-scrollbar">
+<!-- Card 6 -->
+<div class="group bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm border border-l-4 border-l-green-500 border-t-slate-200 border-r-slate-200 border-b-slate-200 dark:border-slate-700 hover:shadow-md cursor-grab active:cursor-grabbing transition-all">
+<div class="flex justify-between items-start mb-2">
+<div class="flex flex-col">
+<span class="text-xs text-[#49829c] font-medium mb-1">#Q-9935</span>
+<h4 class="text-[#0d171c] dark:text-white font-semibold text-sm">City Hall Maintenance</h4>
+</div>
+<button class="opacity-0 group-hover:opacity-100 transition-opacity text-[#49829c] hover:bg-slate-100 dark:hover:bg-slate-700 rounded p-1">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</div>
+<div class="flex items-center gap-1.5 text-xs text-green-600 dark:text-green-400 font-medium mb-4 bg-green-50 dark:bg-green-900/20 p-1.5 rounded w-fit">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+<span>Ready for Job</span>
+</div>
+<div class="flex items-center justify-between pt-3 border-t border-[#f1f5f9] dark:border-slate-700">
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full bg-teal-100 border border-white dark:border-slate-800 flex items-center justify-center text-[10px] font-bold text-teal-600">RH</div>
+</div>
+<span class="text-[#0d171c] dark:text-white font-bold text-sm">$45,000.00</span>
+</div>
+</div>
+<!-- Card 7 -->
+<div class="group bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm border border-l-4 border-l-green-500 border-t-slate-200 border-r-slate-200 border-b-slate-200 dark:border-slate-700 hover:shadow-md cursor-grab active:cursor-grabbing transition-all">
+<div class="flex justify-between items-start mb-2">
+<div class="flex flex-col">
+<span class="text-xs text-[#49829c] font-medium mb-1">#Q-9932</span>
+<h4 class="text-[#0d171c] dark:text-white font-semibold text-sm">Smith Residence</h4>
+</div>
+<button class="opacity-0 group-hover:opacity-100 transition-opacity text-[#49829c] hover:bg-slate-100 dark:hover:bg-slate-700 rounded p-1">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</div>
+<div class="flex items-center gap-1.5 text-xs text-green-600 dark:text-green-400 font-medium mb-4 bg-green-50 dark:bg-green-900/20 p-1.5 rounded w-fit">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+<span>Approved Oct 20</span>
+</div>
+<div class="flex items-center justify-between pt-3 border-t border-[#f1f5f9] dark:border-slate-700">
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full bg-blue-100 border border-white dark:border-slate-800 flex items-center justify-center text-[10px] font-bold text-blue-600">JD</div>
+</div>
+<span class="text-[#0d171c] dark:text-white font-bold text-sm">$850.00</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Column: Declined -->
+<div class="flex-1 min-w-[300px] flex flex-col bg-[#eef3f6] dark:bg-slate-800/50 rounded-xl p-3 border border-[#e7f0f4] dark:border-slate-700/50">
+<div class="flex items-center justify-between px-2 py-3 mb-2">
+<div class="flex items-center gap-2">
+<h3 class="text-red-500 dark:text-red-400 text-sm font-bold uppercase tracking-wider">Declined</h3>
+<span class="bg-white dark:bg-slate-700 text-red-500 dark:text-red-400 text-xs font-bold px-2 py-0.5 rounded-full border border-red-200 dark:border-red-900">1</span>
+</div>
+<button class="text-[#49829c] hover:text-[#0d171c] dark:hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<div class="flex-1 flex flex-col gap-3 overflow-y-auto pr-1 custom-scrollbar">
+<!-- Card 8 -->
+<div class="group bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 hover:shadow-md cursor-grab active:cursor-grabbing transition-all opacity-60 hover:opacity-100 grayscale hover:grayscale-0">
+<div class="flex justify-between items-start mb-2">
+<div class="flex flex-col">
+<span class="text-xs text-[#49829c] font-medium mb-1">#Q-9920</span>
+<h4 class="text-[#0d171c] dark:text-white font-semibold text-sm">Mall Security Upgrade</h4>
+</div>
+<button class="opacity-0 group-hover:opacity-100 transition-opacity text-[#49829c] hover:bg-slate-100 dark:hover:bg-slate-700 rounded p-1">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</div>
+<div class="flex items-center gap-1.5 text-xs text-red-500 mb-4">
+<span class="material-symbols-outlined text-[14px]">block</span>
+<span>Budget constraints</span>
+</div>
+<div class="flex items-center justify-between pt-3 border-t border-[#f1f5f9] dark:border-slate-700">
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full bg-purple-100 border border-white dark:border-slate-800 flex items-center justify-center text-[10px] font-bold text-purple-600">AS</div>
+</div>
+<span class="text-[#0d171c] dark:text-white font-bold text-sm">$15,200.00</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<style>
+        /* Custom Scrollbar for better aesthetics in board */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 20px;
+        }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #475569;
+        }
+    </style>
+</body></html>

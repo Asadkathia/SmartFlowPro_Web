@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SmartFlowPro - Client Directory</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0da2e7",
+                        "primary-content": "#ffffff",
+                        "primary-light": "#e0f2fe", // bg-primary/20 approx
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101c22",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#182830",
+                        "border-light": "#e2e8f0",
+                        "border-dark": "#2d3a42",
+                        "text-main": "#0d171c",
+                        "text-secondary": "#64748b",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-main dark:text-white font-display overflow-hidden h-screen flex w-full">
+<!-- Sidebar -->
+<aside class="flex-shrink-0 w-64 h-full bg-surface-light dark:bg-surface-dark border-r border-border-light dark:border-border-dark flex flex-col justify-between hidden md:flex z-20">
+<div class="flex flex-col gap-4 p-4">
+<!-- Brand -->
+<div class="flex items-center gap-3 px-2 py-2">
+<div class="bg-primary aspect-square rounded-lg size-8 flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-[20px]">water_drop</span>
+</div>
+<h1 class="text-text-main dark:text-white text-lg font-bold leading-normal tracking-tight">SmartFlowPro</h1>
+</div>
+<!-- Navigation -->
+<nav class="flex flex-col gap-1 mt-4">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary dark:text-slate-400 hover:bg-background-light dark:hover:bg-background-dark transition-colors group" href="#">
+<span class="material-symbols-outlined text-[24px] group-hover:text-primary transition-colors">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary dark:text-slate-400 hover:bg-background-light dark:hover:bg-background-dark transition-colors group" href="#">
+<span class="material-symbols-outlined text-[24px] group-hover:text-primary transition-colors">calendar_month</span>
+<span class="text-sm font-medium">Schedule</span>
+</a>
+<!-- Active Link -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary dark:text-primary font-medium" href="#">
+<span class="material-symbols-outlined text-[24px] fill-current">group</span>
+<span class="text-sm">Clients</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary dark:text-slate-400 hover:bg-background-light dark:hover:bg-background-dark transition-colors group" href="#">
+<span class="material-symbols-outlined text-[24px] group-hover:text-primary transition-colors">receipt_long</span>
+<span class="text-sm font-medium">Invoices</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary dark:text-slate-400 hover:bg-background-light dark:hover:bg-background-dark transition-colors group" href="#">
+<span class="material-symbols-outlined text-[24px] group-hover:text-primary transition-colors">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</nav>
+</div>
+<!-- User Profile -->
+<div class="p-4 border-t border-border-light dark:border-border-dark">
+<div class="flex items-center gap-3 px-2 py-2 cursor-pointer hover:bg-background-light dark:hover:bg-background-dark rounded-lg transition-colors">
+<div class="size-10 rounded-full bg-cover bg-center border border-border-light dark:border-border-dark" data-alt="Profile picture of the current logged in admin user" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA5Q3h9iAZwNzNgidFnfNge30CdYGibvgokEu-zWix-0YHbsqJ8NBpZaBGLKdrkPKoKOULzAghBGr-6wbk1V2tCTi7-52SHybNUau2H6khZSZSvrKpncw6dJZacCxVfwP6nrF7OQcp3bT7riMZ0jb6aw_YIsliWziHoBGQd5T-XgrZ6A1EpUpVJmwwvDEj1353LyYSw48IhbgzW5aPV6VF1XOVHV9-G3ptcQe7rSKxPGXi2496321DYlZ0DfBonzxuxMQ613J3RXf4');"></div>
+<div class="flex flex-col">
+<p class="text-sm font-semibold text-text-main dark:text-white">Admin User</p>
+<p class="text-xs text-text-secondary dark:text-slate-500">admin@smartflow.com</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col h-full overflow-hidden relative">
+<!-- Top Navigation / Mobile Menu Trigger (Visible on mobile only) -->
+<header class="md:hidden flex items-center justify-between p-4 bg-surface-light dark:bg-surface-dark border-b border-border-light dark:border-border-dark">
+<div class="flex items-center gap-2">
+<div class="bg-primary aspect-square rounded-lg size-8 flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-[20px]">water_drop</span>
+</div>
+<h1 class="font-bold text-lg">SmartFlowPro</h1>
+</div>
+<button class="text-text-main dark:text-white">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</header>
+<!-- Scrollable Area -->
+<div class="flex-1 overflow-y-auto overflow-x-hidden p-6 md:p-10 w-full">
+<div class="max-w-[1200px] mx-auto flex flex-col gap-6 h-full">
+<!-- Page Header & Actions -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<h1 class="text-3xl md:text-4xl font-black tracking-tight text-text-main dark:text-white mb-1">Clients</h1>
+<p class="text-text-secondary dark:text-slate-400 text-sm">Manage your client directory and view account balances.</p>
+</div>
+<div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+<!-- Search Bar -->
+<div class="relative w-full md:w-80 group">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-text-secondary dark:text-slate-500 group-focus-within:text-primary transition-colors">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-2.5 border-none rounded-lg bg-surface-light dark:bg-surface-dark text-text-main dark:text-white placeholder-text-secondary/60 dark:placeholder-slate-500 focus:ring-2 focus:ring-primary/50 text-sm shadow-sm" placeholder="Search by name, address, or phone..." type="text"/>
+</div>
+<!-- Primary Action -->
+<button class="flex items-center justify-center gap-2 bg-primary hover:bg-sky-500 text-white px-5 py-2.5 rounded-lg text-sm font-bold shadow-sm shadow-blue-500/30 transition-all hover:shadow-blue-500/50 min-w-max">
+<span class="material-symbols-outlined text-[20px]">add</span>
+<span>New Client</span>
+</button>
+</div>
+</div>
+<!-- Filters Row (Optional but adds depth) -->
+<div class="flex flex-wrap gap-2 items-center pb-2">
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-xs font-medium text-text-main dark:text-white hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
+<span>All Clients</span>
+<span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-xs font-medium text-text-secondary dark:text-slate-400 hover:text-text-main hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
+<span>Balance Due</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-xs font-medium text-text-secondary dark:text-slate-400 hover:text-text-main hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
+<span>Recently Active</span>
+</button>
+</div>
+<!-- Table Card -->
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-border-light dark:border-border-dark overflow-hidden flex flex-col flex-1 min-h-[500px]">
+<div class="overflow-x-auto flex-1">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-border-light dark:border-border-dark bg-background-light/50 dark:bg-background-dark/30">
+<th class="px-6 py-4 text-xs font-semibold text-text-secondary dark:text-slate-400 uppercase tracking-wider w-[280px]">Name</th>
+<th class="px-6 py-4 text-xs font-semibold text-text-secondary dark:text-slate-400 uppercase tracking-wider w-[180px]">Phone</th>
+<th class="px-6 py-4 text-xs font-semibold text-text-secondary dark:text-slate-400 uppercase tracking-wider w-[220px]">Email</th>
+<th class="px-6 py-4 text-xs font-semibold text-text-secondary dark:text-slate-400 uppercase tracking-wider min-w-[200px]">Property Address</th>
+<th class="px-6 py-4 text-xs font-semibold text-text-secondary dark:text-slate-400 uppercase tracking-wider w-[140px]">Last Job</th>
+<th class="px-6 py-4 text-xs font-semibold text-text-secondary dark:text-slate-400 uppercase tracking-wider w-[140px]">Balance</th>
+<th class="px-4 py-4 w-[60px]"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-light dark:divide-border-dark text-sm">
+<!-- Row 1 -->
+<tr class="group hover:bg-primary/5 dark:hover:bg-primary/10 transition-colors cursor-pointer">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-cover bg-center flex-shrink-0 border border-gray-100 dark:border-slate-600" data-alt="Portrait of Jane Cooper" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAeBtFNNHiT5FIYygzAegkwZIapaeafUdc4HLZKUmyoriLBiL2Qk3sJSjCDJ8XpaYS8-gF803TjAqa-MwZFykQyBcIPotR6qNByam-Gbw4MHAkX_4MI7go-Df-7Xe0g6UdAt0kt_YZAlSTflQhy75Ro2N-3BpNiyT0JPQMWc84c4L1RpKR-Blj4cvsnkoYVaZa0FtHQgL8bDjKUeWuX8ZJ3z-R6lcvzQTX07ZViarVpe5DRb5rfGpcWNTvEdBPkQZkLW5-1cumQ6zQ');"></div>
+<div>
+<div class="font-semibold text-text-main dark:text-white">Jane Cooper</div>
+<div class="text-xs text-text-secondary dark:text-slate-500 md:hidden">123 Maple Dr</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-mono text-text-secondary dark:text-slate-300">(555) 123-4567</td>
+<td class="px-6 py-4 text-primary hover:underline">jane@example.com</td>
+<td class="px-6 py-4 text-text-secondary dark:text-slate-400">123 Maple Dr, Austin, TX</td>
+<td class="px-6 py-4 text-text-secondary dark:text-slate-400 whitespace-nowrap">Oct 24, 2023</td>
+<td class="px-6 py-4 font-medium text-red-600 dark:text-red-400 font-mono">$150.00</td>
+<td class="px-4 py-4 text-right">
+<button class="text-text-secondary dark:text-slate-500 hover:text-primary p-1 rounded transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="group hover:bg-primary/5 dark:hover:bg-primary/10 transition-colors cursor-pointer">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-cover bg-center flex-shrink-0 border border-gray-100 dark:border-slate-600" data-alt="Portrait of Wade Warren" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBEoqwyOEQNwj5EZpJtloujzMj5PSnQEh8eSKV-CcKNaTF18fdbJL59UcT7O1aYPL54Gr4woAtkUTL7qdD9uvZoZNJcK5aft_7KGkoaDiSySp0rtkZ5cY3WIoMWUsuRXc84ovBhDz-YAkuDgVCuFdPV5S0P062LWrnHS_cHeTilatL39Xo7aZIFXp-7sPhWhhbpTuz-IkivePEeVVVDjz6TCh7F7pJBrIxFA4EzaEJYCCALj3Lz-Edw1A2yXUyqGkNEMRkEnhnYcIk');"></div>
+<div>
+<div class="font-semibold text-text-main dark:text-white">Wade Warren</div>
+<div class="text-xs text-text-secondary dark:text-slate-500 md:hidden">456 Oak Ln</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-mono text-text-secondary dark:text-slate-300">(555) 987-6543</td>
+<td class="px-6 py-4 text-primary hover:underline">wade@example.com</td>
+<td class="px-6 py-4 text-text-secondary dark:text-slate-400">456 Oak Ln, Dallas, TX</td>
+<td class="px-6 py-4 text-text-secondary dark:text-slate-400 whitespace-nowrap">Nov 01, 2023</td>
+<td class="px-6 py-4 font-medium text-text-secondary dark:text-slate-500 font-mono">$0.00</td>
+<td class="px-4 py-4 text-right">
+<button class="text-text-secondary dark:text-slate-500 hover:text-primary p-1 rounded transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="group hover:bg-primary/5 dark:hover:bg-primary/10 transition-colors cursor-pointer">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-300 flex items-center justify-center font-bold text-sm flex-shrink-0">
+                                                ES
+                                            </div>
+<div>
+<div class="font-semibold text-text-main dark:text-white">Esther Howard</div>
+<div class="text-xs text-text-secondary dark:text-slate-500 md:hidden">890 Pine St</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-mono text-text-secondary dark:text-slate-300">(555) 234-5678</td>
+<td class="px-6 py-4 text-primary hover:underline">esther@example.com</td>
+<td class="px-6 py-4 text-text-secondary dark:text-slate-400">890 Pine St, Houston, TX</td>
+<td class="px-6 py-4 text-text-secondary dark:text-slate-400 whitespace-nowrap">Dec 12, 2023</td>
+<td class="px-6 py-4 font-medium text-red-600 dark:text-red-400 font-mono">$320.50</td>
+<td class="px-4 py-4 text-right">
+<button class="text-text-secondary dark:text-slate-500 hover:text-primary p-1 rounded transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="group hover:bg-primary/5 dark:hover:bg-primary/10 transition-colors cursor-pointer">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-cover bg-center flex-shrink-0 border border-gray-100 dark:border-slate-600" data-alt="Portrait of Cameron Williamson" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC0sbg92BNXSMhrVsIXUcmTFURq3wlEFHnen0c6zu9RgHvwaAHmZg1hHw36L_uSfGfNfTl8jzvi_YmzaDkQdUfGcmzf56c2rYhozlvTYXyyzMB9rL5NYLLhBfLdUqk6fURv_9qlyUtnahfsUvA55ZIxhG701Vj0FHLzvbnY5YFjsT81Ay5IviHhddI5HmQ-oFO3WGik8nMCyeKTc39JhiPlYSW_ZxaYszuN8kO8QAgI2GHeIlRYwSW7HZwyVROX4nzjezru9OK5AmA');"></div>
+<div>
+<div class="font-semibold text-text-main dark:text-white">Cameron Williamson</div>
+<div class="text-xs text-text-secondary dark:text-slate-500 md:hidden">567 Cedar Rd</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-mono text-text-secondary dark:text-slate-300">(555) 345-6789</td>
+<td class="px-6 py-4 text-primary hover:underline">cameron@example.com</td>
+<td class="px-6 py-4 text-text-secondary dark:text-slate-400">567 Cedar Rd, Austin, TX</td>
+<td class="px-6 py-4 text-text-secondary dark:text-slate-400 whitespace-nowrap">Jan 05, 2024</td>
+<td class="px-6 py-4 font-medium text-text-secondary dark:text-slate-500 font-mono">$0.00</td>
+<td class="px-4 py-4 text-right">
+<button class="text-text-secondary dark:text-slate-500 hover:text-primary p-1 rounded transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="group hover:bg-primary/5 dark:hover:bg-primary/10 transition-colors cursor-pointer">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-400 flex items-center justify-center font-bold text-sm flex-shrink-0">
+                                                BJ
+                                            </div>
+<div>
+<div class="font-semibold text-text-main dark:text-white">Brooklyn Jones</div>
+<div class="text-xs text-text-secondary dark:text-slate-500 md:hidden">999 Elm Ct</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-mono text-text-secondary dark:text-slate-300">(555) 654-3210</td>
+<td class="px-6 py-4 text-primary hover:underline">brooklyn@example.com</td>
+<td class="px-6 py-4 text-text-secondary dark:text-slate-400">999 Elm Ct, San Antonio, TX</td>
+<td class="px-6 py-4 text-text-secondary dark:text-slate-400 whitespace-nowrap">Jan 18, 2024</td>
+<td class="px-6 py-4 font-medium text-red-600 dark:text-red-400 font-mono">$85.00</td>
+<td class="px-4 py-4 text-right">
+<button class="text-text-secondary dark:text-slate-500 hover:text-primary p-1 rounded transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 6 -->
+<tr class="group hover:bg-primary/5 dark:hover:bg-primary/10 transition-colors cursor-pointer">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-cover bg-center flex-shrink-0 border border-gray-100 dark:border-slate-600" data-alt="Portrait of Jacob Jones" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAcW6kgtS7NguxovghGPknsJGYx-E-1oJZpF_Mwe4J_jQy3AL6ZYawJNo2_okt9dxZI1k2hhdKVx-ybxTehYRzW5PblP9x5UJRQjdjb1CmBtBfFlD5eQ2m_ldV1V1SoHIAy_1SZmFia-VNfx-8WZjgdQ-Pf5lUrp2Ffp-kiaVPweoXJHoKc8Kpoxvp3vQtvChvQTj_C_aehdQBTM89MFftmHfGcMf8zB1QUS_5fGsZzzBg2bdVxnbg4rH3NQhW41FbA_HsYDgG2hmg');"></div>
+<div>
+<div class="font-semibold text-text-main dark:text-white">Jacob Jones</div>
+<div class="text-xs text-text-secondary dark:text-slate-500 md:hidden">234 Beach Blvd</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-mono text-text-secondary dark:text-slate-300">(555) 777-8888</td>
+<td class="px-6 py-4 text-primary hover:underline">jacob@example.com</td>
+<td class="px-6 py-4 text-text-secondary dark:text-slate-400">234 Beach Blvd, Galveston, TX</td>
+<td class="px-6 py-4 text-text-secondary dark:text-slate-400 whitespace-nowrap">Feb 02, 2024</td>
+<td class="px-6 py-4 font-medium text-text-secondary dark:text-slate-500 font-mono">$0.00</td>
+<td class="px-4 py-4 text-right">
+<button class="text-text-secondary dark:text-slate-500 hover:text-primary p-1 rounded transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="border-t border-border-light dark:border-border-dark px-6 py-4 bg-background-light/30 dark:bg-background-dark/20 flex items-center justify-between">
+<div class="text-sm text-text-secondary dark:text-slate-400">
+                            Showing <span class="font-medium text-text-main dark:text-white">1</span> to <span class="font-medium text-text-main dark:text-white">6</span> of <span class="font-medium text-text-main dark:text-white">24</span> clients
+                        </div>
+<div class="flex items-center gap-2">
+<button class="p-1 rounded-md text-text-secondary dark:text-slate-400 hover:text-text-main dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-800 disabled:opacity-50 transition-colors" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="p-1 rounded-md text-text-secondary dark:text-slate-400 hover:text-text-main dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>
