@@ -2,14 +2,31 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { QuoteRepository, type Quote, type QuoteStatus } from "@/lib/repositories/FinanceRepository"
+import { QuoteRepository, type Quote, type QuoteStatus } from "@/lib/repositories/quote-repository"
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { MoreVertical, Plus, FileText, Calendar, DollarSign, User } from "lucide-react"
+import { PageHeader } from "@/components/shell/PageHeader"
+import { FilterBar } from "@/components/shell/FilterBar"
+import { DataTable } from "@/components/tables/DataTable"
+import { EmptyState } from "@/components/feedback/EmptyState"
+import {
+    Drawer,
+    DrawerContent,
+    DrawerHeader,
+    DrawerTitle,
+    DrawerDescription,
+    DrawerBody,
+    DrawerFooter,
+    DrawerClose
+} from "@/components/overlay/Drawer"
 
 export default function QuotesPage() {
-    const [quotes, setQuotes] = useState<Quote[]>([])
+    const [quotes, setQuotes] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
+    const [search, setSearch] = useState("")
+    const [selectedQuote, setSelectedQuote] = useState<any | null>(null)
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
     useEffect(() => {
         loadData()
@@ -17,66 +34,232 @@ export default function QuotesPage() {
 
     async function loadData() {
         setLoading(true)
-        const data = await QuoteRepository.list()
-        setQuotes(data)
-        setLoading(false)
+        try {
+            const data = await QuoteRepository.list()
+            setQuotes(data)
+        } catch (error) {
+            console.error("Failed to load quotes", error)
+        } finally {
+            setLoading(false)
+        }
     }
 
-    const columns: QuoteStatus[] = ['draft', 'sent', 'accepted', 'invoiced']
+    // Access nested customer name safely
+    const getCustomerName = (quote: any) => quote.visit?.job?.customer?.name || "Unknown Client"
 
-    const getColumnQuotes = (status: QuoteStatus) => quotes.filter(q => q.status === status)
+    const filteredQuotes = quotes.filter(q =>
+        q.quote_number.toLowerCase().includes(search.toLowerCase()) ||
+        getCustomerName(q).toLowerCase().includes(search.toLowerCase())
+    )
+
+    const handleRowClick = (quote: any) => {
+        setSelectedQuote(quote)
+        setIsDrawerOpen(true)
+    }
+
+    const statusColors: Record<string, "default" | "secondary" | "success" | "outline"> = {
+        draft: "secondary",
+        finalized: "default",
+        invoiced: "success",
+        sent: "outline", // Mapping extra statuses just in case
+        accepted: "success"
+    }
+
+    const columns = [
+        {
+            key: "number",
+            header: "Quote #",
+            render: (quote: any) => (
+                <span className="font-bold text-primary hover:underline">
+                    {quote.quote_number}
+                </span>
+            )
+        },
+        {
+            key: "client",
+            header: "Client",
+            render: (quote: any) => (
+                <span className="font-medium text-slate-900">
+                    {getCustomerName(quote)}
+                </span>
+            )
+        },
+        {
+            key: "date",
+            header: "Date",
+            render: (quote: any) => (
+                <span className="text-slate-600 text-sm">
+                    {new Date(quote.created_at).toLocaleDateString()}
+                </span>
+            )
+        },
+        {
+            key: "total",
+            header: "Total",
+            render: (quote: any) => (
+                <span className="font-bold text-slate-900">
+                    ${(quote.grand_total || 0).toLocaleString()}
+                </span>
+            )
+        },
+        {
+            key: "status",
+            header: "Status",
+            render: (quote: any) => (
+                <Badge variant={statusColors[quote.status] || "secondary"}>
+                    {quote.status.charAt(0).toUpperCase() + quote.status.slice(1)}
+                </Badge>
+            )
+        }
+    ]
 
     return (
-        <div className="flex flex-col gap-6 h-[calc(100vh-8rem)]">
-            <div className="flex items-center justify-between">
-                <div className="flex flex-col gap-1">
-                    <h1 className="text-3xl font-black tracking-tight text-slate-900">Quotes Pipeline</h1>
-                    <p className="text-slate-500">Track estimates from draft to invoice.</p>
-                </div>
-                <Link href="/dashboard/quotes/new">
-                    <Button className="gap-2">
-                        <span className="material-symbols-outlined text-[20px]">add</span>
-                        New Quote
+        <div className="flex flex-col h-full bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
+            <PageHeader
+                title="Quotes"
+                subtitle="Track estimates and proposals."
+                actions={
+                    <Link href="/dashboard/quotes/new">
+                        <Button className="gap-2">
+                            <Plus className="w-4 h-4" />
+                            New Quote
+                        </Button>
+                    </Link>
+                }
+            />
+
+            <FilterBar
+                searchPlaceholder="Search by number or client..."
+                searchValue={search}
+                onSearchChange={setSearch}
+            />
+
+            <DataTable
+                columns={columns}
+                data={filteredQuotes}
+                loading={loading}
+                getRowKey={(quote) => quote.id}
+                onRowClick={handleRowClick}
+                rowActions={() => (
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-primary">
+                        <MoreVertical className="w-4 h-4" />
                     </Button>
-                </Link>
-            </div>
+                )}
+                emptyState={
+                    <EmptyState
+                        icon={FileText}
+                        title="No quotes found"
+                        description={search ? "Try adjusting your search" : "Create your first quote to get started"}
+                        action={!search ? {
+                            label: "New Quote",
+                            onClick: () => window.location.href = "/dashboard/quotes/new"
+                        } : undefined}
+                    />
+                }
+                className="border-none rounded-none"
+            />
 
-            <div className="flex-1 flex gap-4 overflow-x-auto pb-4">
-                {columns.map(status => (
-                    <div key={status} className="flex-1 min-w-[300px] flex flex-col gap-3 bg-slate-50/50 rounded-xl p-4 border border-slate-200/50">
-                        <div className="flex items-center justify-between mb-2">
-                            <h3 className="font-bold uppercase text-xs text-slate-500 tracking-wider">
-                                {status} <span className="ml-1 bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded-full text-[10px]">{getColumnQuotes(status).length}</span>
-                            </h3>
-                            <Button variant="ghost" size="sm" className="h-6 w-6 p-0 hover:bg-slate-200">
-                                <span className="material-symbols-outlined text-[16px]">add</span>
-                            </Button>
-                        </div>
+            <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+                <DrawerContent>
+                    <DrawerHeader>
+                        <DrawerTitle>Quote Details</DrawerTitle>
+                        <DrawerDescription>
+                            {selectedQuote?.quote_number}
+                        </DrawerDescription>
+                    </DrawerHeader>
 
-                        <div className="flex-1 flex flex-col gap-3 overflow-y-auto">
-                            {getColumnQuotes(status).map(quote => (
-                                <Card key={quote.id} className="p-4 cursor-pointer hover:shadow-md transition-shadow border-slate-200 group">
-                                    <div className="flex justify-between items-start mb-2">
-                                        <Badge variant="outline" className="text-[10px] text-slate-400 font-mono">{quote.quote_number}</Badge>
-                                        <span className="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors text-[18px]">more_horiz</span>
+                    <DrawerBody>
+                        {selectedQuote && (
+                            <div className="space-y-6">
+                                {/* Header Info */}
+                                <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+                                    <div className="flex flex-col">
+                                        <span className="text-sm text-slate-500">Total Value</span>
+                                        <span className="text-2xl font-bold text-slate-900">
+                                            ${(selectedQuote.grand_total || 0).toLocaleString()}
+                                        </span>
                                     </div>
-                                    <h4 className="font-bold text-slate-900 mb-1">{quote.title}</h4>
-                                    <p className="text-sm text-slate-500 mb-3">{quote.customer_name}</p>
-                                    <div className="flex items-center justify-between border-t border-slate-50 pt-3 mt-auto">
-                                        <span className="font-bold text-slate-900">${quote.value.toLocaleString()}</span>
-                                        <span className="text-xs text-slate-400">Exp: {new Date(quote.expiry_date).toLocaleDateString()}</span>
-                                    </div>
-                                </Card>
-                            ))}
-                            {getColumnQuotes(status).length === 0 && (
-                                <div className="h-24 border-2 border-dashed border-slate-200 rounded-lg flex items-center justify-center text-slate-400 text-sm">
-                                    Empty
+                                    <Badge variant={statusColors[selectedQuote.status] || "secondary"} className="text-sm px-3 py-1">
+                                        {selectedQuote.status.charAt(0).toUpperCase() + selectedQuote.status.slice(1)}
+                                    </Badge>
                                 </div>
-                            )}
-                        </div>
-                    </div>
-                ))}
-            </div>
+
+                                {/* Customer Info */}
+                                <div className="space-y-2">
+                                    <h4 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
+                                        <User className="w-4 h-4 text-slate-500" />
+                                        Client
+                                    </h4>
+                                    <div className="bg-slate-50 p-3 rounded-md">
+                                        <p className="font-medium text-slate-900">{getCustomerName(selectedQuote)}</p>
+                                        <p className="text-xs text-slate-500 mt-1">
+                                            Job: {selectedQuote.visit?.job?.job_number || "N/A"}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* Quote Breakdown */}
+                                <div className="space-y-3">
+                                    <h4 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
+                                        <DollarSign className="w-4 h-4 text-slate-500" />
+                                        Breakdown
+                                    </h4>
+                                    <div className="bg-white border border-slate-200 rounded-md p-4 space-y-2">
+                                        <div className="flex justify-between text-sm">
+                                            <span className="text-slate-600">Subtotal</span>
+                                            <span className="font-medium">${(selectedQuote.subtotal || 0).toLocaleString()}</span>
+                                        </div>
+                                        <div className="flex justify-between text-sm">
+                                            <span className="text-slate-600">Tax</span>
+                                            <span className="font-medium">${(selectedQuote.tax_total || 0).toLocaleString()}</span>
+                                        </div>
+                                        <div className="flex justify-between text-sm">
+                                            <span className="text-slate-600">Discount</span>
+                                            <span className="font-medium text-red-600">-${(selectedQuote.discount_total || 0).toLocaleString()}</span>
+                                        </div>
+                                        <div className="border-t border-slate-100 pt-2 mt-2 flex justify-between font-bold text-slate-900">
+                                            <span>Total</span>
+                                            <span>${(selectedQuote.grand_total || 0).toLocaleString()}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Dates */}
+                                <div className="space-y-2">
+                                    <h4 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
+                                        <Calendar className="w-4 h-4 text-slate-500" />
+                                        Dates
+                                    </h4>
+                                    <div className="grid grid-cols-2 gap-3">
+                                        <div className="bg-slate-50 p-2 rounded-md">
+                                            <span className="text-xs text-slate-500 block">Created</span>
+                                            <span className="text-sm font-medium">
+                                                {new Date(selectedQuote.created_at).toLocaleDateString()}
+                                            </span>
+                                        </div>
+                                        <div className="bg-slate-50 p-2 rounded-md">
+                                            <span className="text-xs text-slate-500 block">Updated</span>
+                                            <span className="text-sm font-medium">
+                                                {new Date(selectedQuote.updated_at).toLocaleDateString()}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </DrawerBody>
+
+                    <DrawerFooter>
+                        <Link href={`/dashboard/quotes/${selectedQuote?.id}`} className="w-full">
+                            <Button className="w-full">View Full Quote</Button>
+                        </Link>
+                        <DrawerClose asChild>
+                            <Button variant="outline" className="w-full">Close</Button>
+                        </DrawerClose>
+                    </DrawerFooter>
+                </DrawerContent>
+            </Drawer>
         </div>
     )
 }
+

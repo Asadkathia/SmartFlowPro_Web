@@ -2,17 +2,41 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { JobRepository, type Job, type JobStatus } from "@/lib/repositories/JobRepository"
+import { JobRepository, type Job, type JobStatus } from "@/lib/repositories/job-repository"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { MoreVertical, Plus, Calendar, Clock, MapPin, User } from "lucide-react"
+import { PageHeader } from "@/components/shell/PageHeader"
+import { FilterBar } from "@/components/shell/FilterBar"
+import { DataTable } from "@/components/tables/DataTable"
+import { EmptyState } from "@/components/feedback/EmptyState"
+import {
+    Drawer,
+    DrawerContent,
+    DrawerHeader,
+    DrawerTitle,
+    DrawerDescription,
+    DrawerBody,
+    DrawerFooter,
+    DrawerClose
+} from "@/components/overlay/Drawer"
+
+// Extended type to handle joined fields not in base Job type
+interface ExtendedJob extends Job {
+    customer_name: string
+    technician_name?: string
+    scheduled_start: string
+    scheduled_end: string
+    status: JobStatus
+}
 
 export default function JobsPage() {
-    const [jobs, setJobs] = useState<Job[]>([])
+    const [jobs, setJobs] = useState<ExtendedJob[]>([])
     const [loading, setLoading] = useState(true)
     const [search, setSearch] = useState("")
     const [statusFilter, setStatusFilter] = useState<JobStatus | 'all'>('all')
+    const [selectedJob, setSelectedJob] = useState<ExtendedJob | null>(null)
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
     useEffect(() => {
         loadData()
@@ -22,7 +46,9 @@ export default function JobsPage() {
         setLoading(true)
         try {
             const data = await JobRepository.list()
-            setJobs(data)
+            setJobs(data as unknown as ExtendedJob[])
+        } catch (error) {
+            console.error("Failed to load jobs", error)
         } finally {
             setLoading(false)
         }
@@ -30,7 +56,8 @@ export default function JobsPage() {
 
     const filteredJobs = jobs.filter(job => {
         const matchesSearch = job.job_number.toLowerCase().includes(search.toLowerCase()) ||
-            job.customer_name.toLowerCase().includes(search.toLowerCase())
+            job.customer_name?.toLowerCase().includes(search.toLowerCase()) ||
+            false
         const matchesStatus = statusFilter === 'all' || job.status === statusFilter
         return matchesSearch && matchesStatus
     })
@@ -43,37 +70,101 @@ export default function JobsPage() {
         cancelled: "danger"
     }
 
-    return (
-        <div className="flex flex-col gap-6">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div className="flex flex-col gap-1">
-                    <h1 className="text-3xl font-black tracking-tight text-slate-900">Jobs</h1>
-                    <p className="text-slate-500">Manage and track service requests.</p>
-                </div>
-                <Link href="/dashboard/jobs/new">
-                    <Button className="gap-2">
-                        <span className="material-symbols-outlined text-[20px]">add</span>
-                        Create Job
-                    </Button>
-                </Link>
-            </div>
+    const handleRowClick = (job: ExtendedJob) => {
+        setSelectedJob(job)
+        setIsDrawerOpen(true)
+    }
 
-            {/* Filters */}
-            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-4 justify-between items-center">
-                <div className="relative w-full md:max-w-md">
-                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
-                        <span className="material-symbols-outlined text-[20px]">search</span>
+    const columns = [
+        {
+            key: "job_number",
+            header: "Job ID",
+            render: (job: ExtendedJob) => (
+                <span className="font-bold text-primary hover:underline">
+                    {job.job_number}
+                </span>
+            )
+        },
+        {
+            key: "customer",
+            header: "Client",
+            render: (job: ExtendedJob) => (
+                <span className="font-medium text-slate-900">
+                    {job.customer_name}
+                </span>
+            )
+        },
+        {
+            key: "service",
+            header: "Service Type",
+            render: (job: ExtendedJob) => (
+                <span className="text-slate-600">
+                    {job.service_type}
+                </span>
+            )
+        },
+        {
+            key: "date",
+            header: "Date & Time",
+            render: (job: ExtendedJob) => (
+                <div className="flex flex-col text-xs">
+                    <span className="font-medium text-slate-900">
+                        {new Date(job.scheduled_start).toLocaleDateString()}
                     </span>
-                    <Input
-                        placeholder="Search by ID, client..."
-                        className="pl-10 border-none bg-slate-50"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
+                    <span className="text-slate-500">
+                        {new Date(job.scheduled_start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} -
+                        {new Date(job.scheduled_end).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </span>
                 </div>
-                <div className="flex gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
+            )
+        },
+        {
+            key: "tech",
+            header: "Tech",
+            render: (job: ExtendedJob) => job.technician_name ? (
+                <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-[10px] font-bold">
+                        {job.technician_name.substring(0, 2).toUpperCase()}
+                    </div>
+                    <span className="text-sm text-slate-700">{job.technician_name}</span>
+                </div>
+            ) : (
+                <span className="text-slate-400 italic">Unassigned</span>
+            )
+        },
+        {
+            key: "status",
+            header: "Status",
+            render: (job: ExtendedJob) => (
+                <Badge variant={statusColors[job.status]}>
+                    {job.status.replace('_', ' ')}
+                </Badge>
+            )
+        }
+    ]
+
+    return (
+        <div className="flex flex-col h-full bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
+            <PageHeader
+                title="Jobs"
+                subtitle="Manage and track service requests."
+                actions={
+                    <Link href="/dashboard/jobs/new">
+                        <Button className="gap-2">
+                            <Plus className="w-4 h-4" />
+                            Create Job
+                        </Button>
+                    </Link>
+                }
+            />
+
+            <FilterBar
+                searchPlaceholder="Search by ID, client..."
+                searchValue={search}
+                onSearchChange={setSearch}
+                filters={
                     <select
-                        className="h-9 rounded-md border border-slate-200 bg-white px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                        className="h-9 rounded-md border border-slate-200 bg-white px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value as any)}
                     >
@@ -84,81 +175,113 @@ export default function JobsPage() {
                         <option value="pending">Pending</option>
                         <option value="cancelled">Cancelled</option>
                     </select>
-                </div>
-            </div>
+                }
+            />
 
-            {/* Jobs Table */}
-            <Card className="overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full text-sm text-left">
-                        <thead className="text-xs text-text-secondary uppercase bg-slate-50 border-b border-slate-200">
-                            <tr>
-                                <th className="px-6 py-3 font-medium">Job ID</th>
-                                <th className="px-6 py-3 font-medium">Client</th>
-                                <th className="px-6 py-3 font-medium">Service Type</th>
-                                <th className="px-6 py-3 font-medium">Date & Time</th>
-                                <th className="px-6 py-3 font-medium">Tech</th>
-                                <th className="px-6 py-3 font-medium">Status</th>
-                                <th className="px-6 py-3 font-medium text-right">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100">
-                            {loading ? (
-                                <tr>
-                                    <td colSpan={7} className="px-6 py-8 text-center text-slate-500">Loading jobs...</td>
-                                </tr>
-                            ) : filteredJobs.map((job) => (
-                                <tr key={job.id} className="hover:bg-slate-50/50 transition-colors group">
-                                    <td className="px-6 py-4">
-                                        <Link href={`/dashboard/jobs/${job.id}`} className="font-bold text-primary hover:text-blue-600 hover:underline">
-                                            {job.job_number}
-                                        </Link>
-                                    </td>
-                                    <td className="px-6 py-4 font-medium text-slate-900">
-                                        {job.customer_name}
-                                    </td>
-                                    <td className="px-6 py-4 text-slate-600">
-                                        {job.service_type}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <div className="flex flex-col text-xs">
-                                            <span className="font-medium text-slate-900">
-                                                {new Date(job.scheduled_start).toLocaleDateString()}
-                                            </span>
-                                            <span className="text-slate-500">
-                                                {new Date(job.scheduled_start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} -
-                                                {new Date(job.scheduled_end).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            <DataTable
+                columns={columns}
+                data={filteredJobs}
+                loading={loading}
+                getRowKey={(job) => job.id}
+                onRowClick={handleRowClick}
+                rowActions={(job) => (
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-primary">
+                        <MoreVertical className="w-4 h-4" />
+                    </Button>
+                )}
+                emptyState={
+                    <EmptyState
+                        icon={Calendar}
+                        title="No jobs found"
+                        description={search ? "Try adjusting your search or filters" : "Get started by creating your first job"}
+                        action={!search ? {
+                            label: "Create Job",
+                            onClick: () => window.location.href = "/dashboard/jobs/new"
+                        } : undefined}
+                    />
+                }
+                className="border-none rounded-none"
+            />
+
+            <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+                <DrawerContent>
+                    <DrawerHeader>
+                        <DrawerTitle>Job Details</DrawerTitle>
+                        <DrawerDescription>
+                            {selectedJob?.job_number} • {selectedJob?.status.replace('_', ' ')}
+                        </DrawerDescription>
+                    </DrawerHeader>
+
+                    <DrawerBody>
+                        {selectedJob && (
+                            <div className="space-y-6">
+                                {/* Customer Info */}
+                                <div className="space-y-2">
+                                    <h4 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
+                                        <User className="w-4 h-4 text-slate-500" />
+                                        Customer
+                                    </h4>
+                                    <div className="bg-slate-50 p-3 rounded-md">
+                                        <p className="font-medium">{selectedJob.customer_name}</p>
+                                        <p className="text-sm text-slate-500 mt-1">
+                                            {/* We don't have address in this payload, but would show it here */}
+                                            Client address would go here
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* Schedule Info */}
+                                <div className="space-y-2">
+                                    <h4 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
+                                        <Clock className="w-4 h-4 text-slate-500" />
+                                        Schedule
+                                    </h4>
+                                    <div className="grid grid-cols-2 gap-3">
+                                        <div className="bg-slate-50 p-3 rounded-md">
+                                            <span className="text-xs text-slate-500 block">Start</span>
+                                            <span className="text-sm font-medium">
+                                                {new Date(selectedJob.scheduled_start).toLocaleString()}
                                             </span>
                                         </div>
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {job.technician_name ? (
-                                            <div className="flex items-center gap-2">
-                                                <div className="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-[10px] font-bold">
-                                                    {job.technician_name.substring(0, 2).toUpperCase()}
-                                                </div>
-                                                <span className="text-sm text-slate-700">{job.technician_name}</span>
-                                            </div>
-                                        ) : (
-                                            <span className="text-slate-400 italic">Unassigned</span>
+                                        <div className="bg-slate-50 p-3 rounded-md">
+                                            <span className="text-xs text-slate-500 block">End</span>
+                                            <span className="text-sm font-medium">
+                                                {new Date(selectedJob.scheduled_end).toLocaleString()}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Service Info */}
+                                <div className="space-y-2">
+                                    <h4 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
+                                        <MapPin className="w-4 h-4 text-slate-500" />
+                                        Service Details
+                                    </h4>
+                                    <div className="border border-slate-200 rounded-md p-4">
+                                        <p className="font-medium text-primary">{selectedJob.service_type}</p>
+                                        {selectedJob.notes && (
+                                            <p className="text-sm text-slate-600 mt-2 pt-2 border-t border-slate-100">
+                                                {selectedJob.notes}
+                                            </p>
                                         )}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <Badge variant={statusColors[job.status]}>
-                                            {job.status.replace('_', ' ')}
-                                        </Badge>
-                                    </td>
-                                    <td className="px-6 py-4 text-right">
-                                        <Button variant="ghost" size="icon" className="text-slate-400 hover:text-primary">
-                                            <span className="material-symbols-outlined">more_vert</span>
-                                        </Button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            </Card>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </DrawerBody>
+
+                    <DrawerFooter>
+                        <Link href={`/dashboard/jobs/${selectedJob?.id}`} className="w-full">
+                            <Button className="w-full">View Full Job</Button>
+                        </Link>
+                        <DrawerClose asChild>
+                            <Button variant="outline" className="w-full">Close</Button>
+                        </DrawerClose>
+                    </DrawerFooter>
+                </DrawerContent>
+            </Drawer>
         </div>
     )
 }
+

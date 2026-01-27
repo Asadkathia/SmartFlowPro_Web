@@ -2,18 +2,31 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { TeamRepository, type TeamMember, type TeamRole } from "@/lib/repositories/TeamRepository"
+import { TeamRepository, type TeamMember, type TeamRole, type UserStatus } from "@/lib/repositories/team-repository"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { MoreVertical, Plus, User, Phone, Mail, Shield, UserX, UserCheck } from "lucide-react"
+import { PageHeader } from "@/components/shell/PageHeader"
+import { FilterBar } from "@/components/shell/FilterBar"
+import { DataTable } from "@/components/tables/DataTable"
+import { EmptyState } from "@/components/feedback/EmptyState"
+import {
+    Drawer,
+    DrawerContent,
+    DrawerHeader,
+    DrawerTitle,
+    DrawerDescription,
+    DrawerBody,
+    DrawerFooter,
+    DrawerClose
+} from "@/components/overlay/Drawer"
 
 export default function TeamPage() {
     const [members, setMembers] = useState<TeamMember[]>([])
     const [loading, setLoading] = useState(true)
     const [search, setSearch] = useState("")
-    const [roleFilter, setRoleFilter] = useState<TeamRole | 'all'>('all')
+    const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null)
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
     useEffect(() => {
         loadData()
@@ -24,136 +37,214 @@ export default function TeamPage() {
         try {
             const data = await TeamRepository.list()
             setMembers(data)
+        } catch (error) {
+            console.error("Failed to load team members", error)
         } finally {
             setLoading(false)
         }
     }
 
-    const filteredMembers = members.filter(member => {
-        const matchesSearch = member.full_name.toLowerCase().includes(search.toLowerCase()) ||
-            member.email.toLowerCase().includes(search.toLowerCase())
-        const matchesRole = roleFilter === 'all' || member.role === roleFilter
-        return matchesSearch && matchesRole
-    })
+    const filteredMembers = members.filter(m =>
+        m.full_name.toLowerCase().includes(search.toLowerCase()) ||
+        m.email.toLowerCase().includes(search.toLowerCase())
+    )
 
-    const roleColors: Record<TeamRole, "info" | "warning" | "default" | "secondary" | "success" | "danger" | "outline"> = {
-        admin: "default", // or "purple" if we had it
-        dispatcher: "warning", // Orange
-        technician: "info", // Blue
+    const handleRowClick = (member: TeamMember) => {
+        setSelectedMember(member)
+        setIsDrawerOpen(true)
+    }
+
+    const statusColors: Record<UserStatus, "success" | "secondary" | "danger"> = {
+        active: "success",
+        suspended: "secondary",
+        deactivated: "danger"
+    }
+
+    const roleColors: Record<TeamRole, "default" | "outline" | "secondary"> = {
+        admin: "default",
+        technician: "outline",
+        dispatcher: "secondary",
         accountant: "secondary"
     }
 
+    const columns = [
+        {
+            key: "member",
+            header: "Member",
+            render: (member: TeamMember) => (
+                <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-700">
+                        {member.full_name.substring(0, 2).toUpperCase()}
+                    </div>
+                    <div>
+                        <div className="font-medium text-slate-900">{member.full_name}</div>
+                        <div className="text-xs text-slate-500">{member.email}</div>
+                    </div>
+                </div>
+            )
+        },
+        {
+            key: "role",
+            header: "Role",
+            render: (member: TeamMember) => (
+                <Badge variant={roleColors[member.role]}>
+                    {member.role.charAt(0).toUpperCase() + member.role.slice(1)}
+                </Badge>
+            )
+        },
+        {
+            key: "contact",
+            header: "Phone",
+            render: (member: TeamMember) => (
+                <span className="text-slate-600 font-mono text-xs">
+                    {member.phone || "—"}
+                </span>
+            )
+        },
+        {
+            key: "status",
+            header: "Status",
+            render: (member: TeamMember) => (
+                <Badge variant={statusColors[member.status]}>
+                    {member.status.charAt(0).toUpperCase() + member.status.slice(1)}
+                </Badge>
+            )
+        }
+    ]
+
     return (
-        <div className="flex flex-col gap-6">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div className="flex flex-col gap-1">
-                    <h1 className="text-3xl font-black tracking-tight text-slate-900">Team Directory</h1>
-                    <p className="text-slate-500">Manage your technicians and office staff.</p>
-                </div>
-                <Link href="/dashboard/team/new">
-                    <Button className="gap-2">
-                        <span className="material-symbols-outlined text-[20px]">add</span>
-                        Invite Member
-                    </Button>
-                </Link>
-            </div>
-
-            {/* Filters */}
-            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-4 justify-between items-center">
-                <div className="relative w-full md:max-w-md">
-                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
-                        <span className="material-symbols-outlined text-[20px]">search</span>
-                    </span>
-                    <Input
-                        placeholder="Search by name or email..."
-                        className="pl-10 border-none bg-slate-50"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
-                </div>
-                <div className="flex gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
-                    {(['all', 'technician', 'dispatcher', 'admin'] as const).map((role) => (
-                        <Button
-                            key={role}
-                            variant={roleFilter === role ? "default" : "outline"}
-                            size="sm"
-                            className="capitalize"
-                            onClick={() => setRoleFilter(role)}
-                        >
-                            {role}
+        <div className="flex flex-col h-full bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
+            <PageHeader
+                title="Team"
+                subtitle="Manage your team members and permissions."
+                actions={
+                    <Link href="/dashboard/team/new">
+                        <Button className="gap-2">
+                            <Plus className="w-4 h-4" />
+                            Invite Member
                         </Button>
-                    ))}
-                </div>
-            </div>
+                    </Link>
+                }
+            />
 
-            {/* Grid */}
-            {loading ? (
-                <div className="text-center py-12 text-slate-500">Loading team...</div>
-            ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {filteredMembers.map((member) => (
-                        <Card key={member.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 group">
-                            <div className="p-6 flex flex-col items-center text-center gap-4 border-b border-slate-100 relative">
-                                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button className="text-slate-400 hover:text-primary">
-                                        <span className="material-symbols-outlined">more_horiz</span>
-                                    </button>
+            <FilterBar
+                searchPlaceholder="Search team members..."
+                searchValue={search}
+                onSearchChange={setSearch}
+            />
+
+            <DataTable
+                columns={columns}
+                data={filteredMembers}
+                loading={loading}
+                getRowKey={(member) => member.id}
+                onRowClick={handleRowClick}
+                rowActions={() => (
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-primary">
+                        <MoreVertical className="w-4 h-4" />
+                    </Button>
+                )}
+                emptyState={
+                    <EmptyState
+                        icon={User}
+                        title="No team members found"
+                        description={search ? "Try adjusting your search" : "Invite your first team member to get started"}
+                        action={!search ? {
+                            label: "Invite Member",
+                            onClick: () => window.location.href = "/dashboard/team/new"
+                        } : undefined}
+                    />
+                }
+                className="border-none rounded-none"
+            />
+
+            <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+                <DrawerContent>
+                    <DrawerHeader>
+                        <DrawerTitle>Member Profile</DrawerTitle>
+                        <DrawerDescription>
+                            Detailed information and permissions for this team member.
+                        </DrawerDescription>
+                    </DrawerHeader>
+
+                    <DrawerBody>
+                        {selectedMember && (
+                            <div className="space-y-6">
+                                {/* Header */}
+                                <div className="flex items-center gap-4 pb-4 border-b border-slate-100">
+                                    <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-xl font-bold text-primary">
+                                        {selectedMember.full_name.substring(0, 2).toUpperCase()}
+                                    </div>
+                                    <div>
+                                        <h3 className="text-lg font-bold text-slate-900">{selectedMember.full_name}</h3>
+                                        <div className="flex gap-2 mt-1">
+                                            <Badge variant={roleColors[selectedMember.role]}>
+                                                {selectedMember.role}
+                                            </Badge>
+                                            <Badge variant={statusColors[selectedMember.status]}>
+                                                {selectedMember.status}
+                                            </Badge>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="relative">
-                                    <Avatar className="w-24 h-24 border-4 border-white shadow-sm">
-                                        <AvatarImage src={member.avatar_url} />
-                                        <AvatarFallback>{member.full_name.substring(0, 2).toUpperCase()}</AvatarFallback>
-                                    </Avatar>
-                                    {member.status === 'active' && (
-                                        <span className="absolute bottom-1 right-1 w-5 h-5 bg-green-500 border-2 border-white rounded-full"></span>
-                                    )}
+
+                                {/* Contact Info */}
+                                <div className="space-y-3">
+                                    <h4 className="text-sm font-semibold text-slate-900">Contact Information</h4>
+                                    <div className="grid gap-3">
+                                        <div className="flex items-center gap-3 text-sm text-slate-600 bg-slate-50 p-3 rounded-md">
+                                            <Mail className="w-4 h-4 text-slate-400" />
+                                            {selectedMember.email}
+                                        </div>
+                                        <div className="flex items-center gap-3 text-sm text-slate-600 bg-slate-50 p-3 rounded-md">
+                                            <Phone className="w-4 h-4 text-slate-400" />
+                                            {selectedMember.phone || "No phone number"}
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h3 className="text-lg font-bold text-slate-900">{member.full_name}</h3>
-                                    <Badge variant={roleColors[member.role] || "outline"} className="mt-2 capitalize">
-                                        {member.role}
-                                    </Badge>
+
+                                {/* Permissions/Role Info */}
+                                <div className="space-y-3">
+                                    <h4 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
+                                        <Shield className="w-4 h-4 text-slate-500" />
+                                        Role & Access
+                                    </h4>
+                                    <div className="border border-slate-200 rounded-md p-4 bg-slate-50/50">
+                                        <p className="font-medium text-slate-900 capitalize">{selectedMember.role}</p>
+                                        <p className="text-sm text-slate-500 mt-1">
+                                            {selectedMember.role === 'admin' && "Has full access to all settings, billing, and team management."}
+                                            {selectedMember.role === 'technician' && "Can view assigned jobs, schedule, and complete invoices."}
+                                            {selectedMember.role === 'dispatcher' && "Can schedule jobs, manage customers, and view reports."}
+                                            {selectedMember.role === 'accountant' && "Can view invoices, quotes, and financial reports."}
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="p-4 bg-slate-50 flex flex-col gap-3">
-                                <div className="flex items-center gap-3 text-sm text-slate-600">
-                                    <span className="material-symbols-outlined text-[18px] text-primary">call</span>
-                                    {member.phone}
-                                </div>
-                                <div className="flex items-center gap-3 text-sm text-slate-600">
-                                    <span className="material-symbols-outlined text-[18px] text-primary">mail</span>
-                                    <span className="truncate">{member.email}</span>
-                                </div>
-                            </div>
-                            <div className="p-4 flex items-center justify-between border-t border-slate-100">
-                                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</span>
-                                <div className="flex items-center gap-2">
-                                    <span className={cn(
-                                        "text-xs font-medium",
-                                        member.status === 'active' ? "text-slate-700" : "text-slate-400"
-                                    )}>
-                                        {member.status === 'active' ? "Active" : "Inactive"}
-                                    </span>
-                                    {/* Toggle Switch Mock */}
-                                    <div className={cn(
-                                        "w-10 h-6 rounded-full relative transition-colors cursor-pointer",
-                                        member.status === 'active' ? "bg-primary" : "bg-slate-200"
-                                    )}>
-                                        <div className={cn(
-                                            "absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform shadow-sm",
-                                            member.status === 'active' ? "translate-x-4" : "translate-x-0"
-                                        )}></div>
+
+                                {/* Actions */}
+                                <div className="space-y-3 pt-4 border-t border-slate-100">
+                                    <h4 className="text-sm font-semibold text-slate-900">Actions</h4>
+                                    <div className="grid grid-cols-2 gap-3">
+                                        <Button variant="outline" className="w-full justify-start gap-2">
+                                            <UserCheck className="w-4 h-4" />
+                                            Edit Profile
+                                        </Button>
+                                        <Button variant="outline" className="w-full justify-start gap-2 text-red-600 hover:text-red-700 hover:bg-red-50">
+                                            <UserX className="w-4 h-4" />
+                                            Deactivate
+                                        </Button>
                                     </div>
                                 </div>
                             </div>
-                        </Card>
-                    ))}
-                </div>
-            )}
+                        )}
+                    </DrawerBody>
+
+                    <DrawerFooter>
+                        <DrawerClose asChild>
+                            <Button variant="outline" className="w-full">Close</Button>
+                        </DrawerClose>
+                    </DrawerFooter>
+                </DrawerContent>
+            </Drawer>
         </div>
     )
-}
-
-function cn(...classes: (string | undefined)[]) {
-    return classes.filter(Boolean).join(' ')
 }

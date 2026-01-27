@@ -2,18 +2,34 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { InvoiceRepository, type Invoice, type InvoiceStatus } from "@/lib/repositories/FinanceRepository"
+import { InvoiceRepository } from "@/lib/repositories/invoice-repository"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 
 export default function InvoiceDetailPage({ params }: { params: { id: string } }) {
-    const [invoice, setInvoice] = useState<Invoice | undefined>()
+    const [invoice, setInvoice] = useState<any | undefined>()
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        InvoiceRepository.get(params.id).then(data => {
-            setInvoice(data)
+        InvoiceRepository.getById(params.id).then(data => {
+            if (data) {
+                const customer = data.visit?.job?.customer
+                const property = customer?.properties?.[0]
+                const mapped = {
+                    ...data,
+                    customer_name: customer?.name || 'Unknown',
+                    customer_email: customer?.email || '',
+                    customer_address: property ? `${property.address}, ${property.city || ''}` : '',
+                    issue_date: new Date(data.created_at).toLocaleDateString(),
+                    due_date: data.due_date ? new Date(data.due_date).toLocaleDateString() : 'Upon Receipt',
+                    // Use items from relation or mock if empty for UI testing
+                    items: data.items && data.items.length > 0 ? data.items : [],
+                    subtotal: data.items?.reduce((acc: number, item: any) => acc + (item.total || 0), 0) || data.total || 0,
+                    tax: 0, // Calculate or fetch if available
+                }
+                setInvoice(mapped)
+            }
             setLoading(false)
         })
     }, [params.id])
@@ -21,7 +37,7 @@ export default function InvoiceDetailPage({ params }: { params: { id: string } }
     if (loading) return <div className="p-12 text-center text-slate-500">Loading invoice...</div>
     if (!invoice) return <div className="p-12 text-center text-red-500">Invoice not found</div>
 
-    const statusColors: Record<InvoiceStatus, "info" | "success" | "warning" | "danger" | "default" | "secondary"> = {
+    const statusColors: Record<string, "default" | "secondary" | "success" | "warning" | "danger"> = {
         draft: "secondary",
         unpaid: "warning",
         paid: "success",
@@ -64,7 +80,7 @@ export default function InvoiceDetailPage({ params }: { params: { id: string } }
                         <div className="text-right">
                             <h3 className="text-xl font-bold text-slate-900 mb-1">INVOICE</h3>
                             <p className="text-slate-500 text-sm mb-4">#{invoice.invoice_number}</p>
-                            <Badge variant={statusColors[invoice.status]} className="text-sm px-3 py-1 uppercase">
+                            <Badge variant={statusColors[invoice.status] || "default"} className="text-sm px-3 py-1 uppercase">
                                 {invoice.status}
                             </Badge>
                         </div>
@@ -101,14 +117,20 @@ export default function InvoiceDetailPage({ params }: { params: { id: string } }
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
-                            {invoice.items.map((item, i) => (
-                                <tr key={i}>
-                                    <td className="px-4 py-4 font-medium text-slate-900">{item.description}</td>
-                                    <td className="px-4 py-4 text-right text-slate-600">{item.qty}</td>
-                                    <td className="px-4 py-4 text-right text-slate-600">${item.unit_price.toFixed(2)}</td>
-                                    <td className="px-4 py-4 text-right text-slate-900 font-bold">${item.total.toFixed(2)}</td>
+                            {invoice.items.length === 0 ? (
+                                <tr>
+                                    <td colSpan={4} className="px-4 py-8 text-center text-slate-400 italic">No line items</td>
                                 </tr>
-                            ))}
+                            ) : (
+                                invoice.items.map((item: any, i: number) => (
+                                    <tr key={i}>
+                                        <td className="px-4 py-4 font-medium text-slate-900">{item.description || 'Item'}</td>
+                                        <td className="px-4 py-4 text-right text-slate-600">{item.qty || 1}</td>
+                                        <td className="px-4 py-4 text-right text-slate-600">${(item.unit_price || 0).toFixed(2)}</td>
+                                        <td className="px-4 py-4 text-right text-slate-900 font-bold">${(item.total || 0).toFixed(2)}</td>
+                                    </tr>
+                                ))
+                            )}
                         </tbody>
                     </table>
 
@@ -120,7 +142,7 @@ export default function InvoiceDetailPage({ params }: { params: { id: string } }
                                 <span className="text-slate-900 font-bold">${invoice.subtotal.toFixed(2)}</span>
                             </div>
                             <div className="flex justify-between text-sm">
-                                <span className="text-slate-500 font-medium">Tax (8%)</span>
+                                <span className="text-slate-500 font-medium">Tax</span>
                                 <span className="text-slate-900 font-bold">${invoice.tax.toFixed(2)}</span>
                             </div>
                             <div className="flex justify-between text-lg pt-3 border-t border-slate-200">

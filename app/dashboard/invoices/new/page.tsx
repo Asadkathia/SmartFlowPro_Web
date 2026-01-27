@@ -6,13 +6,13 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { InvoiceRepository } from "@/lib/repositories/FinanceRepository"
-import { CustomerRepository, Customer } from "@/lib/repositories/CustomerRepository"
+import { InvoiceRepository } from "@/lib/repositories/invoice-repository"
+import { CustomerRepository, type CustomerWithProperties } from "@/lib/repositories/customer-repository"
 
 export default function CreateInvoicePage() {
     const router = useRouter()
     const [saving, setSaving] = useState(false)
-    const [customers, setCustomers] = useState<Customer[]>([])
+    const [customers, setCustomers] = useState<CustomerWithProperties[]>([])
 
     // Simple state for V1
     const [selectedCustomerId, setSelectedCustomerId] = useState("")
@@ -20,29 +20,21 @@ export default function CreateInvoicePage() {
     const [dueDate, setDueDate] = useState("")
 
     useEffect(() => {
-        CustomerRepository.list().then(setCustomers)
+        CustomerRepository.list().then(result => setCustomers(result.data))
     }, [])
 
     async function handleCreate() {
         if (!amount || !selectedCustomerId) return
         setSaving(true)
-        const customer = customers.find(c => c.id === selectedCustomerId)
-        const total = parseFloat(amount)
-        const tax = total * 0.08
-
-        await InvoiceRepository.create({
-            customer_name: customer?.name || 'Unknown',
-            customer_email: customer?.email || 'unknown@example.com',
-            customer_address: customer?.properties[0]?.address || 'Unknown Address',
-            issue_date: new Date().toLocaleDateString(),
-            due_date: dueDate || new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toLocaleDateString(),
-            items: [{ description: 'General Service', qty: 1, unit_price: total, total: total }],
-            subtotal: total,
-            tax,
-            total: total + tax
-        })
+        try {
+            // TODO: Implement actual invoice creation which requires a Visit or Quote
+            alert("Invoice creation requires a Visit. This feature is under construction.")
+            // await InvoiceRepository.create(...)
+        } catch (error) {
+            console.error(error)
+        }
         setSaving(false)
-        router.push('/dashboard/invoices')
+        // router.push('/dashboard/invoices')
     }
 
     return (

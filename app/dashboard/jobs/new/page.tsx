@@ -7,9 +7,9 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { JobRepository } from "@/lib/repositories/JobRepository"
-import { CustomerRepository, Customer } from "@/lib/repositories/CustomerRepository"
-import { TeamRepository, TeamMember } from "@/lib/repositories/TeamRepository"
+import { JobRepository } from "@/lib/repositories/job-repository"
+import { CustomerRepository, type CustomerWithProperties } from "@/lib/repositories/customer-repository"
+import { TeamRepository, TeamMember } from "@/lib/repositories/team-repository"
 
 export default function CreateJobPage() {
     const router = useRouter()
@@ -17,7 +17,7 @@ export default function CreateJobPage() {
     const [saving, setSaving] = useState(false)
 
     // Form State
-    const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null)
+    const [selectedCustomer, setSelectedCustomer] = useState<CustomerWithProperties | null>(null)
     const [serviceType, setServiceType] = useState("")
     const [description, setDescription] = useState("")
     const [priority, setPriority] = useState<'low' | 'medium' | 'high'>("medium")
@@ -27,11 +27,11 @@ export default function CreateJobPage() {
     const [selectedTech, setSelectedTech] = useState<TeamMember | null>(null)
 
     // Data
-    const [customers, setCustomers] = useState<Customer[]>([])
+    const [customers, setCustomers] = useState<CustomerWithProperties[]>([])
     const [technicians, setTechnicians] = useState<TeamMember[]>([])
 
     useEffect(() => {
-        CustomerRepository.list().then(setCustomers)
+        CustomerRepository.list().then(res => setCustomers(res.data))
         TeamRepository.list().then(data => setTechnicians(data.filter(m => m.role === 'technician')))
     }, [])
 

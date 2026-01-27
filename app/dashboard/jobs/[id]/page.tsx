@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { JobRepository, type Job, type JobStatus } from "@/lib/repositories/JobRepository"
+import { JobRepository } from "@/lib/repositories/job-repository"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { MapPin, Calendar, Plus, Clock, User } from "lucide-react"
 
 export default function JobDetailPage({ params }: { params: { id: string } }) {
-    const [job, setJob] = useState<Job | undefined>()
+    const [job, setJob] = useState<any | undefined>()
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
@@ -17,16 +18,28 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
 
     async function loadData() {
         setLoading(true)
-        const data = await JobRepository.get(params.id)
-        setJob(data)
-        setLoading(false)
+        try {
+            const data = await JobRepository.getById(params.id)
+            setJob(data)
+        } catch (error) {
+            console.error("Failed to load job", error)
+        } finally {
+            setLoading(false)
+        }
     }
 
     if (loading) return <div className="p-12 text-center text-slate-500">Loading job details...</div>
     if (!job) return <div className="p-12 text-center text-red-500">Job not found</div>
 
-    const statusColors: Record<JobStatus, "info" | "warning" | "success" | "secondary" | "danger"> = {
-        scheduled: "info",
+    // Use primary visit for display
+    const visit = job.visits?.[0]
+    const status = visit?.status || 'scheduled'
+    const technician = visit?.technician
+    const customer = job.customer
+    const property = customer?.properties?.[0]
+
+    const statusColors: Record<string, "default" | "secondary" | "success" | "warning" | "danger"> = {
+        scheduled: "secondary",
         in_progress: "warning",
         completed: "success",
         pending: "secondary",
@@ -45,8 +58,8 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
                     </div>
                     <div className="flex items-center gap-3">
                         <h1 className="text-3xl font-black text-slate-900">{job.service_type}</h1>
-                        <Badge variant={statusColors[job.status]} className="text-sm px-3 py-1">
-                            {job.status.replace('_', ' ')}
+                        <Badge variant={statusColors[status] || "default"} className="text-sm px-3 py-1">
+                            {status.toUpperCase().replace('_', ' ')}
                         </Badge>
                     </div>
                 </div>
@@ -67,14 +80,16 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
                             <div>
                                 <span className="text-xs text-slate-500 font-medium uppercase tracking-wider block mb-1">Customer</span>
                                 <Link href={`/dashboard/customers/${job.customer_id}`} className="text-primary font-bold hover:underline text-lg">
-                                    {job.customer_name}
+                                    {customer?.name || "Unknown"}
                                 </Link>
                             </div>
                             <div>
                                 <span className="text-xs text-slate-500 font-medium uppercase tracking-wider block mb-1">Location</span>
                                 <div className="flex items-start gap-2">
-                                    <span className="material-symbols-outlined text-slate-400 text-[18px] mt-0.5">location_on</span>
-                                    <span className="text-slate-900 font-medium">{job.location}</span>
+                                    <MapPin className="w-4 h-4 text-slate-400 mt-1" />
+                                    <span className="text-slate-900 font-medium">
+                                        {property ? `${property.address}, ${property.city}` : "No address on file"}
+                                    </span>
                                 </div>
                             </div>
                         </CardContent>
@@ -87,33 +102,40 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
                         <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="flex flex-col gap-1">
                                 <span className="text-xs text-slate-500 font-medium uppercase tracking-wider">Date & Time</span>
-                                <div className="flex items-center gap-2 font-medium text-slate-900 text-lg">
-                                    <span className="material-symbols-outlined text-primary">calendar_month</span>
-                                    {new Date(job.scheduled_start).toLocaleDateString()}
-                                </div>
-                                <div className="flex items-center gap-2 font-medium text-slate-700 ml-7">
-                                    <span>
-                                        {new Date(job.scheduled_start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} -
-                                        {new Date(job.scheduled_end).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                    </span>
-                                </div>
+                                {visit ? (
+                                    <>
+                                        <div className="flex items-center gap-2 font-medium text-slate-900 text-lg">
+                                            <Calendar className="w-5 h-5 text-primary" />
+                                            {new Date(visit.scheduled_start).toLocaleDateString()}
+                                        </div>
+                                        <div className="flex items-center gap-2 font-medium text-slate-700 ml-7">
+                                            <Clock className="w-4 h-4 text-slate-400" />
+                                            <span>
+                                                {new Date(visit.scheduled_start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} -
+                                                {new Date(visit.scheduled_end).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            </span>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <p className="text-slate-500 italic">No visit scheduled</p>
+                                )}
                             </div>
                             <div className="flex flex-col gap-1">
                                 <span className="text-xs text-slate-500 font-medium uppercase tracking-wider">Assigned Technician</span>
-                                {job.technician_name ? (
+                                {technician ? (
                                     <div className="flex items-center gap-3 bg-slate-50 p-2 rounded-lg border border-slate-100">
                                         <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center font-bold text-slate-600">
-                                            {job.technician_name.substring(0, 2).toUpperCase()}
+                                            {technician.full_name?.substring(0, 2).toUpperCase() || "T"}
                                         </div>
                                         <div>
-                                            <p className="font-bold text-slate-900">{job.technician_name}</p>
+                                            <p className="font-bold text-slate-900">{technician.full_name}</p>
                                             <span className="text-xs text-green-600 font-medium">Notify</span>
                                         </div>
                                         <Button variant="ghost" size="sm" className="ml-auto text-primary">Reassign</Button>
                                     </div>
                                 ) : (
                                     <Button variant="outline" className="border-dashed">
-                                        <span className="material-symbols-outlined mr-2">add</span>
+                                        <Plus className="w-4 h-4 mr-2" />
                                         Assign Technician
                                     </Button>
                                 )}
@@ -145,14 +167,17 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
                             <div className="border-l-2 border-slate-100 pl-4 space-y-6">
                                 <div className="relative">
                                     <div className="absolute -left-[21px] top-1 w-3 h-3 rounded-full bg-slate-200 border-2 border-white ring-1 ring-slate-100"></div>
-                                    <p className="text-sm text-slate-900">Job created by <strong>Alex Morgan</strong></p>
-                                    <span className="text-xs text-slate-500">Oct 20, 10:30 AM</span>
+                                    <p className="text-sm text-slate-900">Job created</p>
+                                    <span className="text-xs text-slate-500">
+                                        {new Date(job.created_at).toLocaleString()}
+                                    </span>
                                 </div>
-                                <div className="relative">
-                                    <div className="absolute -left-[21px] top-1 w-3 h-3 rounded-full bg-blue-500 border-2 border-white ring-1 ring-blue-100"></div>
-                                    <p className="text-sm text-slate-900">Assigned to <strong>{job.technician_name || 'Technician'}</strong></p>
-                                    <span className="text-xs text-slate-500">Oct 20, 10:35 AM</span>
-                                </div>
+                                {technician && (
+                                    <div className="relative">
+                                        <div className="absolute -left-[21px] top-1 w-3 h-3 rounded-full bg-blue-500 border-2 border-white ring-1 ring-blue-100"></div>
+                                        <p className="text-sm text-slate-900">Assigned to <strong>{technician.full_name}</strong></p>
+                                    </div>
+                                )}
                             </div>
                         </CardContent>
                     </Card>
@@ -161,3 +186,5 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
         </div>
     )
 }
+
+

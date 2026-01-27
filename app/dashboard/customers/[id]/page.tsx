@@ -2,17 +2,18 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { CustomerRepository, type Customer } from "@/lib/repositories/CustomerRepository"
+import { CustomerRepository, type CustomerWithProperties } from "@/lib/repositories/customer-repository"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Mail, Phone, Plus, MapPin } from "lucide-react"
 
 export default function CustomerDetailPage({ params }: { params: { id: string } }) {
-    const [customer, setCustomer] = useState<Customer | undefined>()
+    const [customer, setCustomer] = useState<CustomerWithProperties | null>(null)
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        CustomerRepository.get(params.id).then(c => {
+        CustomerRepository.getById(params.id).then(c => {
             setCustomer(c)
             setLoading(false)
         })
@@ -49,7 +50,7 @@ export default function CustomerDetailPage({ params }: { params: { id: string } 
                         <CardContent className="flex flex-col gap-4">
                             <div className="flex items-center gap-3">
                                 <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center shrink-0">
-                                    <span className="material-symbols-outlined text-slate-500">mail</span>
+                                    <Mail className="w-4 h-4 text-slate-500" />
                                 </div>
                                 <div className="flex flex-col overflow-hidden">
                                     <span className="text-xs text-slate-500 font-medium">Email</span>
@@ -58,7 +59,7 @@ export default function CustomerDetailPage({ params }: { params: { id: string } 
                             </div>
                             <div className="flex items-center gap-3">
                                 <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center shrink-0">
-                                    <span className="material-symbols-outlined text-slate-500">call</span>
+                                    <Phone className="w-4 h-4 text-slate-500" />
                                 </div>
                                 <div className="flex flex-col">
                                     <span className="text-xs text-slate-500 font-medium">Phone</span>
@@ -72,7 +73,7 @@ export default function CustomerDetailPage({ params }: { params: { id: string } 
                         <CardHeader className="flex flex-row items-center justify-between">
                             <CardTitle className="text-lg">Tags</CardTitle>
                             <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
-                                <span className="material-symbols-outlined text-[16px]">add</span>
+                                <Plus className="w-4 h-4" />
                             </Button>
                         </CardHeader>
                         <CardContent className="flex flex-wrap gap-2">
@@ -95,10 +96,10 @@ export default function CustomerDetailPage({ params }: { params: { id: string } 
                                 {customer.properties.map(prop => (
                                     <div key={prop.id} className="flex items-center justify-between p-4 rounded-lg bg-slate-50 border border-slate-100">
                                         <div className="flex items-center gap-3">
-                                            <span className="material-symbols-outlined text-slate-400">location_on</span>
+                                            <MapPin className="w-5 h-5 text-slate-400" />
                                             <div className="flex flex-col">
                                                 <span className="font-medium text-slate-900">{prop.address}</span>
-                                                <span className="text-sm text-slate-500">{prop.city}, {prop.state} {prop.zip}</span>
+                                                <span className="text-sm text-slate-500">{prop.city}, {prop.state} {prop.zip_code}</span>
                                             </div>
                                         </div>
                                         <Button variant="ghost" size="sm">View</Button>
@@ -124,3 +125,4 @@ export default function CustomerDetailPage({ params }: { params: { id: string } 
         </div>
     )
 }
+

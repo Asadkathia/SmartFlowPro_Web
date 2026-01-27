@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    html {
+        font-size: 14px;
+    }
+
+    body {
+        @apply text-foreground bg-background antialiased;
+    }
+
+    h1 {
+        @apply text-xl font-semibold tracking-tight;
+    }
+
+    h2 {
+        @apply text-lg font-semibold tracking-tight;
+    }
+
+    h3 {
+        @apply text-base font-semibold;
+    }
+}

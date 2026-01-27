@@ -3,23 +3,35 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
+import {
+    LayoutDashboard,
+    Users,
+    UserCircle,
+    Briefcase,
+    Calendar,
+    FileText,
+    Receipt,
+    Package,
+    Settings,
+    Droplet
+} from "lucide-react"
 
 interface NavItem {
     name: string
     href: string
-    icon: string
+    icon: React.ComponentType<{ className?: string }>
 }
 
 const navItems: NavItem[] = [
-    { name: "Dashboard", href: "/dashboard", icon: "dashboard" },
-    { name: "Team", href: "/dashboard/team", icon: "group" },
-    { name: "Customers", href: "/dashboard/customers", icon: "person" },
-    { name: "Jobs", href: "/dashboard/jobs", icon: "work" },
-    { name: "Schedule", href: "/dashboard/schedule", icon: "calendar_month" },
-    { name: "Quotes", href: "/dashboard/quotes", icon: "format_quote" },
-    { name: "Invoices", href: "/dashboard/invoices", icon: "receipt_long" },
-    { name: "Inventory", href: "/dashboard/inventory", icon: "inventory_2" },
-    { name: "Settings", href: "/dashboard/settings", icon: "settings" },
+    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+    { name: "Team", href: "/dashboard/team", icon: Users },
+    { name: "Customers", href: "/dashboard/customers", icon: UserCircle },
+    { name: "Jobs", href: "/dashboard/jobs", icon: Briefcase },
+    { name: "Schedule", href: "/dashboard/schedule", icon: Calendar },
+    { name: "Quotes", href: "/dashboard/quotes", icon: FileText },
+    { name: "Invoices", href: "/dashboard/invoices", icon: Receipt },
+    { name: "Inventory", href: "/dashboard/inventory", icon: Package },
+    { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ]
 
 export function Sidebar() {
@@ -31,7 +43,7 @@ export function Sidebar() {
             <div className="p-6">
                 <div className="flex flex-col gap-1">
                     <h1 className="text-xl font-bold tracking-tight text-primary flex items-center gap-2">
-                        <span className="material-symbols-outlined text-primary">water_drop</span>
+                        <Droplet className="w-5 h-5" />
                         SmartFlowPro
                     </h1>
                     <p className="text-text-secondary text-xs font-medium px-8">Web Admin</p>
@@ -42,6 +54,7 @@ export function Sidebar() {
             <nav className="flex-1 px-4 space-y-1 overflow-y-auto w-full">
                 {navItems.map((item) => {
                     const isActive = pathname === item.href
+                    const Icon = item.icon
                     return (
                         <Link
                             key={item.href}
@@ -53,12 +66,10 @@ export function Sidebar() {
                                     : "text-text-secondary hover:bg-slate-100 hover:text-primary"
                             )}
                         >
-                            <span className={cn(
-                                "material-symbols-outlined text-[20px] transition-colors",
-                                isActive ? "fill-1" : "group-hover:text-primary"
-                            )}>
-                                {item.icon}
-                            </span>
+                            <Icon className={cn(
+                                "w-5 h-5 transition-colors",
+                                isActive ? "text-primary" : "group-hover:text-primary"
+                            )} />
                             {item.name}
                         </Link>
                     )

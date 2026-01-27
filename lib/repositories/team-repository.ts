@@ -1,5 +1,10 @@
 import { createClient } from '@/lib/supabase/client'
-import type { User, UserRole, EmployeeInvitation } from '@/lib/types/database'
+import type { User, UserRole, EmployeeInvitation, UserStatus } from '@/lib/types/database'
+
+// Re-export types for convenience
+export type { User, UserRole, EmployeeInvitation, UserStatus }
+export type TeamMember = User
+export type TeamRole = UserRole
 
 export interface InviteEmployeeParams {
     email: string

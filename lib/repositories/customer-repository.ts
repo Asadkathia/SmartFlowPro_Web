@@ -1,6 +1,9 @@
 import { createClient } from '@/lib/supabase/client'
 import type { Customer, Property } from '@/lib/types/database'
 
+// Re-export types for convenience
+export type { Customer, Property }
+
 export interface CustomerWithProperties extends Customer {
     properties: Property[]
 }

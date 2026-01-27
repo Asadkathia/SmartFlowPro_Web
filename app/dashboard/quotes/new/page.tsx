@@ -6,13 +6,13 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { QuoteRepository } from "@/lib/repositories/FinanceRepository"
-import { CustomerRepository, Customer } from "@/lib/repositories/CustomerRepository"
+import { QuoteRepository } from "@/lib/repositories/quote-repository"
+import { CustomerRepository, type CustomerWithProperties } from "@/lib/repositories/customer-repository"
 
 export default function CreateQuotePage() {
     const router = useRouter()
     const [saving, setSaving] = useState(false)
-    const [customers, setCustomers] = useState<Customer[]>([])
+    const [customers, setCustomers] = useState<CustomerWithProperties[]>([])
 
     const [title, setTitle] = useState("")
     const [value, setValue] = useState("")
@@ -20,22 +20,21 @@ export default function CreateQuotePage() {
     const [selectedCustomerId, setSelectedCustomerId] = useState("")
 
     useEffect(() => {
-        CustomerRepository.list().then(setCustomers)
+        CustomerRepository.list().then(result => setCustomers(result.data))
     }, [])
 
     async function handleCreate() {
         if (!title || !value || !selectedCustomerId) return
         setSaving(true)
-        const customer = customers.find(c => c.id === selectedCustomerId)
-        await QuoteRepository.create({
-            title,
-            value: parseFloat(value),
-            expiry_date: expiry || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-            customer_name: customer?.name || 'Unknown',
-            created_at: new Date().toISOString()
-        })
+        try {
+            // TODO: Implement actual quote creation which requires a Visit
+            alert("Quote creation requires a Visit. This feature is under construction.")
+            // await QuoteRepository.create(...)
+        } catch (error) {
+            console.error(error)
+        }
         setSaving(false)
-        router.push('/dashboard/quotes')
+        // router.push('/dashboard/quotes')
     }
 
     return (

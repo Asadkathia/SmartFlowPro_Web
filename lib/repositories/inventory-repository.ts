@@ -1,6 +1,9 @@
 import { createClient } from '@/lib/supabase/client'
 import type { InventoryItem } from '@/lib/types/database'
 
+// Re-export types for convenience
+export type { InventoryItem }
+
 export interface CreateInventoryItemParams {
     name: string
     sku?: string

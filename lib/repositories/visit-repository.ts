@@ -1,6 +1,9 @@
 import { createClient } from '@/lib/supabase/client'
 import type { Visit, VisitStatus } from '@/lib/types/database'
 
+// Re-export types
+export type { Visit, VisitStatus }
+
 export interface CreateVisitParams {
     job_id: string
     technician_id: string
@@ -31,7 +34,7 @@ export class VisitRepository {
 
         let query = supabase
             .from('visits')
-            .select('*, job:jobs(*), technician:users(*)')
+            .select('*, job:jobs(*, customer:customers(*)), technician:users(*)')
             .order('scheduled_start', { ascending: true })
 
         if (filters?.jobId) {

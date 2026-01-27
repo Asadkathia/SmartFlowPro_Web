@@ -2,15 +2,31 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { InventoryRepository, type InventoryItem } from "@/lib/repositories/InventoryRepository"
+import { InventoryRepository, type InventoryItem } from "@/lib/repositories/inventory-repository"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { MoreVertical, Plus, Package, Tag, Ban, CheckCircle } from "lucide-react"
+import { PageHeader } from "@/components/shell/PageHeader"
+import { FilterBar } from "@/components/shell/FilterBar"
+import { DataTable } from "@/components/tables/DataTable"
+import { EmptyState } from "@/components/feedback/EmptyState"
+import {
+    Drawer,
+    DrawerContent,
+    DrawerHeader,
+    DrawerTitle,
+    DrawerDescription,
+    DrawerBody,
+    DrawerFooter,
+    DrawerClose
+} from "@/components/overlay/Drawer"
 
 export default function InventoryPage() {
     const [items, setItems] = useState<InventoryItem[]>([])
     const [loading, setLoading] = useState(true)
     const [search, setSearch] = useState("")
+    const [selectedItem, setSelectedItem] = useState<InventoryItem | null>(null)
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
     useEffect(() => {
         loadData()
@@ -18,99 +34,199 @@ export default function InventoryPage() {
 
     async function loadData() {
         setLoading(true)
-        const data = await InventoryRepository.list()
-        setItems(data)
-        setLoading(false)
+        try {
+            const data = await InventoryRepository.list()
+            setItems(data)
+        } catch (error) {
+            console.error("Failed to load inventory", error)
+        } finally {
+            setLoading(false)
+        }
     }
 
     const filteredItems = items.filter(i =>
         i.name.toLowerCase().includes(search.toLowerCase()) ||
-        i.sku.toLowerCase().includes(search.toLowerCase())
+        (i.sku?.toLowerCase().includes(search.toLowerCase()) ?? false)
     )
 
+    const handleRowClick = (item: InventoryItem) => {
+        setSelectedItem(item)
+        setIsDrawerOpen(true)
+    }
+
+    const columns = [
+        {
+            key: "name",
+            header: "Item Name",
+            render: (item: InventoryItem) => (
+                <div className="flex flex-col">
+                    <span className="font-bold text-slate-900">{item.name}</span>
+                    <span className="text-xs text-slate-500 font-mono">{item.sku || "No SKU"}</span>
+                </div>
+            )
+        },
+        {
+            key: "category",
+            header: "Category",
+            render: (item: InventoryItem) => (
+                <Badge variant="secondary" className="font-normal capitalize">
+                    {item.category || "Uncategorized"}
+                </Badge>
+            )
+        },
+        {
+            key: "price",
+            header: "Price",
+            render: (item: InventoryItem) => (
+                <span className="font-medium text-slate-900">
+                    ${item.sale_price.toFixed(2)}
+                </span>
+            )
+        },
+        {
+            key: "status",
+            header: "Status",
+            render: (item: InventoryItem) => item.active ? (
+                <Badge variant="success">Active</Badge>
+            ) : (
+                <Badge variant="secondary">Inactive</Badge>
+            )
+        }
+    ]
+
     return (
-        <div className="flex flex-col gap-6">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div className="flex flex-col gap-1">
-                    <h1 className="text-3xl font-black tracking-tight text-slate-900">Inventory</h1>
-                    <p className="text-slate-500">Track parts and materials.</p>
-                </div>
-                <div className="flex gap-2">
-                    <Button variant="outline">Import CSV</Button>
-                    <Link href="/dashboard/inventory/new">
-                        <Button className="gap-2">
-                            <span className="material-symbols-outlined text-[20px]">add</span>
-                            Add Item
-                        </Button>
-                    </Link>
-                </div>
-            </div>
+        <div className="flex flex-col h-full bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
+            <PageHeader
+                title="Inventory"
+                subtitle="Track parts and materials."
+                actions={
+                    <div className="flex gap-2">
+                        <Button variant="outline">Import CSV</Button>
+                        <Link href="/dashboard/inventory/new">
+                            <Button className="gap-2">
+                                <Plus className="w-4 h-4" />
+                                Add Item
+                            </Button>
+                        </Link>
+                    </div>
+                }
+            />
 
-            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-4 justify-between items-center">
-                <div className="relative w-full md:max-w-md">
-                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
-                        <span className="material-symbols-outlined text-[20px]">search</span>
-                    </span>
-                    <Input
-                        placeholder="Search items by name or SKU..."
-                        className="pl-10 border-none bg-slate-50"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
+            <FilterBar
+                searchPlaceholder="Search items by name or SKU..."
+                searchValue={search}
+                onSearchChange={setSearch}
+            />
+
+            <DataTable
+                columns={columns}
+                data={filteredItems}
+                loading={loading}
+                getRowKey={(item) => item.id}
+                onRowClick={handleRowClick}
+                rowActions={() => (
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-primary">
+                        <MoreVertical className="w-4 h-4" />
+                    </Button>
+                )}
+                emptyState={
+                    <EmptyState
+                        icon={Package}
+                        title="No inventory items"
+                        description={search ? "Try adjusting your search" : "Add your first item to get started"}
+                        action={!search ? {
+                            label: "Add Item",
+                            onClick: () => window.location.href = "/dashboard/inventory/new"
+                        } : undefined}
                     />
-                </div>
-                <div className="flex gap-2">
-                    <Button variant="outline" size="sm">Filter by Category</Button>
-                </div>
-            </div>
+                }
+                className="border-none rounded-none"
+            />
 
-            <Card className="overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full text-sm text-left">
-                        <thead className="text-xs text-text-secondary uppercase bg-slate-50 border-b border-slate-200">
-                            <tr>
-                                <th className="px-6 py-3 font-medium">Item Name</th>
-                                <th className="px-6 py-3 font-medium">SKU</th>
-                                <th className="px-6 py-3 font-medium">Category</th>
-                                <th className="px-6 py-3 font-medium text-right">Qty on Hand</th>
-                                <th className="px-6 py-3 font-medium text-right">Price</th>
-                                <th className="px-6 py-3 font-medium text-right">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100">
-                            {loading ? (
-                                <tr>
-                                    <td colSpan={6} className="px-6 py-8 text-center text-slate-500">Loading inventory...</td>
-                                </tr>
-                            ) : filteredItems.map((item) => (
-                                <tr key={item.id} className="hover:bg-slate-50/50 transition-colors group">
-                                    <td className="px-6 py-4 font-bold text-slate-900">
-                                        {item.name}
-                                    </td>
-                                    <td className="px-6 py-4 text-slate-500 font-mono text-xs">
-                                        {item.sku}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <span className="inline-flex items-center rounded-md bg-slate-50 px-2 py-1 text-xs font-medium text-slate-600 ring-1 ring-inset ring-slate-500/10">
-                                            {item.category}
-                                        </span>
-                                    </td>
-                                    <td className="px-6 py-4 text-right font-medium">
-                                        {item.quantity} <span className="text-slate-400 text-xs font-normal">{item.unit}</span>
-                                    </td>
-                                    <td className="px-6 py-4 text-right font-bold text-slate-900">
-                                        ${item.price.toFixed(2)}
-                                    </td>
-                                    <td className="px-6 py-4 text-right">
-                                        <Button variant="ghost" size="icon" className="text-slate-400 hover:text-primary">
-                                            <span className="material-symbols-outlined">edit</span>
-                                        </Button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            </Card>
+            <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+                <DrawerContent>
+                    <DrawerHeader>
+                        <DrawerTitle>Item Details</DrawerTitle>
+                        <DrawerDescription>
+                            {selectedItem?.sku ? `SKU: ${selectedItem.sku}` : 'Product Details'}
+                        </DrawerDescription>
+                    </DrawerHeader>
+
+                    <DrawerBody>
+                        {selectedItem && (
+                            <div className="space-y-6">
+                                {/* Header Info */}
+                                <div className="flex items-start gap-4 pb-4 border-b border-slate-100">
+                                    <div className="w-16 h-16 rounded-lg bg-slate-100 flex items-center justify-center">
+                                        {selectedItem.image_path ? (
+                                            <img src={selectedItem.image_path} alt={selectedItem.name} className="w-full h-full object-cover rounded-lg" />
+                                        ) : (
+                                            <Package className="w-8 h-8 text-slate-400" />
+                                        )}
+                                    </div>
+                                    <div>
+                                        <h3 className="text-lg font-bold text-slate-900">{selectedItem.name}</h3>
+                                        <div className="flex gap-2 mt-1">
+                                            <Badge variant="secondary">{selectedItem.category || "Uncategorized"}</Badge>
+                                            <Badge variant={selectedItem.active ? "success" : "secondary"}>
+                                                {selectedItem.active ? "Active" : "Inactive"}
+                                            </Badge>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Pricing */}
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="p-4 bg-slate-50 rounded-lg">
+                                        <span className="text-xs text-slate-500 uppercase tracking-wide">Sale Price</span>
+                                        <div className="text-xl font-bold text-slate-900 mt-1">
+                                            ${selectedItem.sale_price.toFixed(2)}
+                                        </div>
+                                        <span className="text-xs text-slate-500">per {selectedItem.unit}</span>
+                                    </div>
+                                    <div className="p-4 bg-slate-50 rounded-lg">
+                                        <span className="text-xs text-slate-500 uppercase tracking-wide">Taxable</span>
+                                        <div className="flex items-center gap-2 mt-2">
+                                            {selectedItem.taxable_default ? (
+                                                <>
+                                                    <CheckCircle className="w-4 h-4 text-green-600" />
+                                                    <span className="text-sm font-medium">Yes</span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Ban className="w-4 h-4 text-slate-400" />
+                                                    <span className="text-sm font-medium">No</span>
+                                                </>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Details */}
+                                <div className="space-y-3">
+                                    <h4 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
+                                        <Tag className="w-4 h-4 text-slate-500" />
+                                        Description
+                                    </h4>
+                                    <div className="text-sm text-slate-600 leading-relaxed bg-white border border-slate-200 p-3 rounded-md">
+                                        {selectedItem.description || "No description provided for this item."}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </DrawerBody>
+
+                    <DrawerFooter>
+                        <Link href={`/dashboard/inventory/${selectedItem?.id}`} className="w-full">
+                            <Button className="w-full">Edit Item</Button>
+                        </Link>
+                        <DrawerClose asChild>
+                            <Button variant="outline" className="w-full">Close</Button>
+                        </DrawerClose>
+                    </DrawerFooter>
+                </DrawerContent>
+            </Drawer>
         </div>
     )
 }
+

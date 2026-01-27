@@ -10,6 +10,29 @@ const config: Config = {
     theme: {
         extend: {
             colors: {
+                // Ring/Border tokens (for focus states)
+                ring: "#494949",
+                border: "#e2e8f0",
+                input: "#e2e8f0",
+
+                // Foreground tokens
+                foreground: "#494949",
+                "card-foreground": "#494949",
+                "muted-foreground": "#64748b",
+
+                // Muted/Accent surfaces
+                muted: "#f1f5f9",
+                accent: "#f1f5f9",
+                "accent-foreground": "#494949",
+
+                // Secondary (neutral)
+                secondary: "#f1f5f9",
+                "secondary-foreground": "#494949",
+
+                // Destructive (error)
+                destructive: "#EF4444",
+                "destructive-foreground": "#FFFFFF",
+
                 // Semantic colors
                 primary: {
                     DEFAULT: "#494949", // Dark Grey

@@ -1,6 +1,9 @@
 import { createClient } from '@/lib/supabase/client'
 import type { Invoice, InvoiceStatus } from '@/lib/types/database'
 
+// Re-export types
+export type { Invoice, InvoiceStatus }
+
 export interface ListInvoicesParams {
     status?: InvoiceStatus
     customerId?: string
@@ -47,7 +50,7 @@ export class InvoiceRepository {
 
         const { data, error } = await supabase
             .from('invoices')
-            .select('*, visit:visits(*), quote:quotes(*), payments(*)')
+            .select('*, visit:visits(*, job:jobs(*, customer:customers(*, properties(*)))), quote:quotes(*), payments(*), items:invoice_items(*)')
             .eq('id', id)
             .single()
 
