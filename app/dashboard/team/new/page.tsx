@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { TeamRepository, TeamRole } from "@/lib/repositories/TeamRepository"
+import { TeamRepository, TeamRole } from "@/lib/repositories/team-repository"
 
 export default function InviteMemberPage() {
     const router = useRouter()

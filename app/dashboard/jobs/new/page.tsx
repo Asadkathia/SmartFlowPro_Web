@@ -10,11 +10,26 @@ import { Badge } from "@/components/ui/badge"
 import { JobRepository } from "@/lib/repositories/job-repository"
 import { CustomerRepository, type CustomerWithProperties } from "@/lib/repositories/customer-repository"
 import { TeamRepository, TeamMember } from "@/lib/repositories/team-repository"
+import { Sparkles } from "lucide-react"
+
+const SERVICE_TYPES = [
+    "HVAC",
+    "Plumbing",
+    "Electrical",
+    "Appliance Repair",
+    "Installation",
+    "Maintenance",
+    "Inspection",
+    "Emergency Service",
+    "General Repair",
+]
 
 export default function CreateJobPage() {
     const router = useRouter()
     const [step, setStep] = useState(1)
     const [saving, setSaving] = useState(false)
+    const [enhancing, setEnhancing] = useState(false)
+    const [enhanceError, setEnhanceError] = useState("")
 
     // Form State
     const [selectedCustomer, setSelectedCustomer] = useState<CustomerWithProperties | null>(null)
@@ -60,6 +75,34 @@ export default function CreateJobPage() {
         router.push('/dashboard/jobs')
     }
 
+    async function handleEnhanceDescription() {
+        if (!description.trim() || enhancing) return
+
+        setEnhanceError("")
+        setEnhancing(true)
+
+        try {
+            const response = await fetch('/api/ai/enhance-job-description', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ description })
+            })
+
+            const data = await response.json()
+            if (!response.ok) {
+                throw new Error(data?.error || 'Failed to enhance description')
+            }
+
+            if (data?.enhancedDescription) {
+                setDescription(data.enhancedDescription)
+            }
+        } catch (error: any) {
+            setEnhanceError(error?.message || 'Failed to enhance description')
+        } finally {
+            setEnhancing(false)
+        }
+    }
+
     return (
         <div className="max-w-3xl mx-auto flex flex-col gap-6">
             <div className="flex items-center gap-2 text-slate-500 text-sm mb-1">
@@ -95,6 +138,19 @@ export default function CreateJobPage() {
                     {step === 1 && (
                         <div className="flex flex-col gap-6">
                             <h2 className="text-xl font-bold">Select Customer</h2>
+                            <div className="flex flex-col gap-2">
+                                <label className="text-sm font-medium">Service Type</label>
+                                <select
+                                    className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                                    value={serviceType}
+                                    onChange={(e) => setServiceType(e.target.value)}
+                                >
+                                    <option value="">Select service type</option>
+                                    {SERVICE_TYPES.map((type) => (
+                                        <option key={type} value={type}>{type}</option>
+                                    ))}
+                                </select>
+                            </div>
                             <div className="grid grid-cols-1 gap-4 max-h-96 overflow-y-auto">
                                 {customers.map(c => (
                                     <div
@@ -108,7 +164,7 @@ export default function CreateJobPage() {
                                 ))}
                             </div>
                             <div className="flex justify-end mt-4">
-                                <Button disabled={!selectedCustomer} onClick={() => setStep(2)}>Next Step</Button>
+                                <Button disabled={!selectedCustomer || !serviceType} onClick={() => setStep(2)}>Next Step</Button>
                             </div>
                         </div>
                     )}
@@ -117,22 +173,32 @@ export default function CreateJobPage() {
                         <div className="flex flex-col gap-6">
                             <h2 className="text-xl font-bold">Job Details</h2>
                             <div className="flex flex-col gap-4">
-                                <div className="flex flex-col gap-2">
-                                    <label className="text-sm font-medium">Service Type</label>
-                                    <Input
-                                        placeholder="e.g. HVAC Maintenance"
-                                        value={serviceType}
-                                        onChange={e => setServiceType(e.target.value)}
-                                    />
+                                <div className="flex items-center gap-2 text-sm">
+                                    <span className="text-slate-500">Service Type:</span>
+                                    <Badge variant="outline">{serviceType}</Badge>
                                 </div>
                                 <div className="flex flex-col gap-2">
                                     <label className="text-sm font-medium">Description</label>
-                                    <textarea
-                                        className="flex min-h-[80px] w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
-                                        placeholder="Describe the issue..."
-                                        value={description}
-                                        onChange={e => setDescription(e.target.value)}
-                                    />
+                                    <div className="relative">
+                                        <Button
+                                            type="button"
+                                            size="sm"
+                                            variant="outline"
+                                            className="absolute top-2 right-2 z-10 gap-1.5 h-7 px-2"
+                                            onClick={handleEnhanceDescription}
+                                            disabled={!description.trim() || enhancing}
+                                        >
+                                            <Sparkles className="w-3.5 h-3.5" />
+                                            {enhancing ? 'Enhancing...' : 'Enhance with AI'}
+                                        </Button>
+                                        <textarea
+                                            className="flex min-h-[110px] w-full rounded-md border border-slate-200 bg-white px-3 py-2 pr-40 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
+                                            placeholder="Describe the issue..."
+                                            value={description}
+                                            onChange={e => setDescription(e.target.value)}
+                                        />
+                                    </div>
+                                    {enhanceError && <p className="text-xs text-red-600">{enhanceError}</p>}
                                 </div>
                                 <div className="flex flex-col gap-2">
                                     <label className="text-sm font-medium">Priority</label>

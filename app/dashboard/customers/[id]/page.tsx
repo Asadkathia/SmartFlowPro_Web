@@ -2,13 +2,15 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
+import { useParams } from "next/navigation"
 import { CustomerRepository, type CustomerWithProperties } from "@/lib/repositories/customer-repository"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Mail, Phone, Plus, MapPin } from "lucide-react"
 
-export default function CustomerDetailPage({ params }: { params: { id: string } }) {
+export default function CustomerDetailPage() {
+    const params = useParams<{ id: string }>()
     const [customer, setCustomer] = useState<CustomerWithProperties | null>(null)
     const [loading, setLoading] = useState(true)
 
@@ -125,4 +127,3 @@ export default function CustomerDetailPage({ params }: { params: { id: string } 
         </div>
     )
 }
-

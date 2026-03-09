@@ -163,12 +163,12 @@ FOR SELECT
 TO authenticated
 USING (org_id = get_user_org_id() AND can_access_web_admin());
 
--- Only admins can create jobs
+-- Web admin users can create jobs
 CREATE POLICY "jobs_insert_policy"
 ON public.jobs
 FOR INSERT
 TO authenticated
-WITH CHECK (org_id = get_user_org_id() AND is_admin());
+WITH CHECK (org_id = get_user_org_id() AND can_access_web_admin());
 
 CREATE POLICY "jobs_update_policy"
 ON public.jobs

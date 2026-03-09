@@ -2,13 +2,15 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
+import { useParams } from "next/navigation"
 import { JobRepository } from "@/lib/repositories/job-repository"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { MapPin, Calendar, Plus, Clock, User } from "lucide-react"
 
-export default function JobDetailPage({ params }: { params: { id: string } }) {
+export default function JobDetailPage() {
+    const params = useParams<{ id: string }>()
     const [job, setJob] = useState<any | undefined>()
     const [loading, setLoading] = useState(true)
 
@@ -186,5 +188,4 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
         </div>
     )
 }
-
 

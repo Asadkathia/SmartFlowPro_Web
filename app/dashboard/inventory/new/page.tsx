@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { InventoryRepository } from "@/lib/repositories/InventoryRepository"
+import { InventoryRepository } from "@/lib/repositories/inventory-repository"
 
 export default function AddInventoryPage() {
     const router = useRouter()
@@ -26,8 +26,7 @@ export default function AddInventoryPage() {
             name,
             sku,
             category: category || 'General',
-            quantity: parseInt(quantity) || 0,
-            price: parseFloat(price) || 0,
+            sale_price: parseFloat(price) || 0,
             unit
         })
         setSaving(false)

@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
+import { useParams } from "next/navigation"
 import { InvoiceRepository } from "@/lib/repositories/invoice-repository"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 
-export default function InvoiceDetailPage({ params }: { params: { id: string } }) {
+export default function InvoiceDetailPage() {
+    const params = useParams<{ id: string }>()
     const [invoice, setInvoice] = useState<any | undefined>()
     const [loading, setLoading] = useState(true)
 
