@@ -50,7 +50,7 @@ export class InvoiceRepository {
 
         const { data, error } = await supabase
             .from('invoices')
-            .select('*, visit:visits(*, job:jobs(*, customer:customers(*, properties(*)))), quote:quotes(*), payments(*), items:invoice_items(*)')
+            .select('*, visit:visits(*, job:jobs(*, customer:customers(*, properties(*)))), quote:quotes(*), payments(*), items:line_items(*)')
             .eq('id', id)
             .single()
 
@@ -61,7 +61,38 @@ export class InvoiceRepository {
             throw new Error(`Failed to fetch invoice: ${error.message}`)
         }
 
-        return data
+        const payments = (data?.payments as any[]) || []
+        const collectorIds = Array.from(
+            new Set(
+                payments
+                    .map((payment) => payment?.received_by)
+                    .filter((id): id is string => Boolean(id))
+            )
+        )
+
+        const collectorNameById: Record<string, string> = {}
+        if (collectorIds.length > 0) {
+            const { data: collectors, error: collectorsError } = await supabase
+                .from('users')
+                .select('id, full_name')
+                .in('id', collectorIds)
+
+            if (!collectorsError) {
+                for (const collector of collectors || []) {
+                    collectorNameById[collector.id] = collector.full_name || 'Unknown'
+                }
+            }
+        }
+
+        const enrichedPayments = payments.map((payment) => ({
+            ...payment,
+            collector_name: collectorNameById[payment.received_by] || 'Unknown',
+        }))
+
+        return {
+            ...data,
+            payments: enrichedPayments,
+        }
     }
 
     /**

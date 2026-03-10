@@ -29,6 +29,11 @@ export default function InvoiceDetailPage() {
                     items: data.items && data.items.length > 0 ? data.items : [],
                     subtotal: data.items?.reduce((acc: number, item: any) => acc + (item.total || 0), 0) || data.total || 0,
                     tax: 0, // Calculate or fetch if available
+                    payments: (data.payments || [])
+                        .slice()
+                        .sort((a: any, b: any) =>
+                            new Date(b.received_at).getTime() - new Date(a.received_at).getTime()
+                        ),
                 }
                 setInvoice(mapped)
             }
@@ -39,12 +44,19 @@ export default function InvoiceDetailPage() {
     if (loading) return <div className="p-12 text-center text-slate-500">Loading invoice...</div>
     if (!invoice) return <div className="p-12 text-center text-red-500">Invoice not found</div>
 
+    const totalPaid = (invoice.payments || []).reduce((sum: number, payment: any) => {
+        return sum + Number(payment.amount || 0)
+    }, 0)
+    const remainingBalance = Math.max(Number(invoice.total || 0) - totalPaid, 0)
+
     const statusColors: Record<string, "default" | "secondary" | "success" | "warning" | "danger"> = {
         draft: "secondary",
         unpaid: "warning",
+        partially_paid: "warning",
         paid: "success",
         overdue: "danger",
-        void: "default"
+        void: "default",
+        refunded: "secondary",
     }
 
     return (
@@ -61,7 +73,7 @@ export default function InvoiceDetailPage() {
                 <div className="flex gap-2">
                     <Button variant="outline">Download PDF</Button>
                     <Button variant="outline">Send Email</Button>
-                    {invoice.status === 'unpaid' && (
+                    {(invoice.status === 'unpaid' || invoice.status === 'partially_paid') && (
                         <Button className="bg-green-600 hover:bg-green-700">Record Payment</Button>
                     )}
                 </div>
@@ -151,7 +163,51 @@ export default function InvoiceDetailPage() {
                                 <span className="text-primary font-bold">Total</span>
                                 <span className="text-primary font-bold">${invoice.total.toFixed(2)}</span>
                             </div>
+                            <div className="flex justify-between text-sm">
+                                <span className="text-slate-500 font-medium">Paid</span>
+                                <span className="text-emerald-700 font-bold">${totalPaid.toFixed(2)}</span>
+                            </div>
+                            <div className="flex justify-between text-sm pt-2 border-t border-slate-200">
+                                <span className="text-slate-600 font-semibold">Balance Due</span>
+                                <span className="text-slate-900 font-bold">${remainingBalance.toFixed(2)}</span>
+                            </div>
                         </div>
+                    </div>
+
+                    <div className="mt-10 border-t border-slate-100 pt-8">
+                        <h4 className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4">Payment History</h4>
+                        {(invoice.payments || []).length === 0 ? (
+                            <p className="text-sm text-slate-500 italic">No payments recorded yet.</p>
+                        ) : (
+                            <table className="w-full text-sm text-left">
+                                <thead className="bg-slate-50 text-slate-500 font-bold uppercase text-xs">
+                                    <tr>
+                                        <th className="px-4 py-3 rounded-l-lg">Date</th>
+                                        <th className="px-4 py-3">Collected By</th>
+                                        <th className="px-4 py-3">Method</th>
+                                        <th className="px-4 py-3 text-right rounded-r-lg">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-100">
+                                    {invoice.payments.map((payment: any) => (
+                                        <tr key={payment.id}>
+                                            <td className="px-4 py-3 text-slate-700">
+                                                {payment.received_at ? new Date(payment.received_at).toLocaleString() : 'N/A'}
+                                            </td>
+                                            <td className="px-4 py-3 text-slate-700">
+                                                {payment.collector_name || payment.received_by || 'Unknown'}
+                                            </td>
+                                            <td className="px-4 py-3 text-slate-600 capitalize">
+                                                {(payment.method || 'N/A').replace('_', ' ')}
+                                            </td>
+                                            <td className="px-4 py-3 text-right font-semibold text-slate-900">
+                                                ${Number(payment.amount || 0).toFixed(2)}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        )}
                     </div>
                 </CardContent>
             </Card>
